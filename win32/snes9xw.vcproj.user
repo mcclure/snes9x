@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="shift_jis"?>
+<VisualStudioUserFile
+	ProjectType="Visual C++"
+	Version="9.00"
+	>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32"
+			>
+			<DebugSettings
+				Environment="_NO_DEBUG_HEAP=1"
+				EnvironmentMerge="true"
+			/>
+		</Configuration>
+	</Configurations>
+</VisualStudioUserFile>
