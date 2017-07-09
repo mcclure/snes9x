@@ -1502,3 +1502,8 @@ void DoAVIVideoFrame()
 		AVIAddSoundSamples(avi_sound_buffer, samples, GUI.AVIOut);
 	}
 }
+
+// Prevents unresolved external symbol when building with old LibPNG.
+// If you try to build with an older MSVC, this might need to be wrapped in an #if _MSC_VER of some kind.
+FILE _iob[] = { *stdin, *stdout, *stderr };
+extern "C" FILE * __cdecl __iob_func(void) { return _iob; }

@@ -641,4 +641,6 @@ RECT GetWindowMargins(HWND hwnd, UINT width);
 
 void UpdateToolWindows(bool frameAdvance = false);
 
+#define D3TEXT(quote) L##quote
+
 #endif // !defined(SNES9X_H_INCLUDED)
