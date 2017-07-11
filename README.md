@@ -9,6 +9,7 @@ This repo is all the bits to build a version of snes9x-rr that can synchronize t
 - Minor fixes to get the result to build in VS2015.
 - Copied Penlight 1.5.2 (from github) into coop/ folder
 - Built luasocket-3.0-rc1 (from github) and copied socket.lua into coop/ and core.dll into coop/socket/
+- Downloaded iup-3.22_Win32_dll14_lib from SourceForge and extracted iup.dll from it, downloaded iup-3.22-Lua51_Win32_dll14_lib from SourceForge and extracted iuplua51.dll from it, renamed iuplua51.dll to iuplua.dll and also opened it in a hex editor and changed its dependency on "lua5.1.dll" to "lua51.dll\0". Copied all this into coop/ 
 
 ## How to build for testing
 
