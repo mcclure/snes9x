@@ -1,3 +1,3 @@
-require "test2"
+require "pl/init"
 
-print "TEST"
+print(pretty.write({1,2,3},''))
