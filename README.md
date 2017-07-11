@@ -7,7 +7,8 @@ This repo is all the bits to build a version of snes9x-rr that can synchronize t
 - Checked out https://github.com/TASVideos/snes9x-rr ; this version of the repo contains the windows binaries required to build.
 - Checked out https://github.com/snes9x-rr/snes9x ; this version of the repo has a current snes9x branch. Exported files on top of TASVideos archive.
 - Minor fixes to get the result to build in VS2015.
-- Copied Penlight 1.5.2 into coop/ folder
+- Copied Penlight 1.5.2 (from github) into coop/ folder
+- Built luasocket-3.0-rc1 (from github) and copied socket.lua into coop/ and core.dll into coop/socket/
 
 ## How to build for testing
 
@@ -22,7 +23,11 @@ To make an install package:
 - Copy lua/lib/lua51.dll into install dir
 - Copy coop/ directory into install dir.
 
-# Author / License
+## How to build for Mac or Linux?
+
+You're going to need to somehow build shared objects for the C portion of Luasocket.
+
+## Author / License
 
 The "coop" bits (the Lua files in coop/) are written by <<andi.m.mcclure@gmail.com>>. I will add a license for them soon.
 
@@ -49,5 +54,28 @@ The coop folder contains Penlight. Here is its license:
 	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 	OR OTHER DEALINGS IN THE SOFTWARE.
+
+The coop folder contains Luasocket. Here is its license:
+
+	LuaSocket 3.0 license
+	Copyright © 2004-2013 Diego Nehab
+
+	Permission is hereby granted, free of charge, to any person obtaining a
+	copy of this software and associated documentation files (the "Software"),
+	to deal in the Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish, distribute, sublicense,
+	and/or sell copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+	DEALINGS IN THE SOFTWARE.
 
 SNES9X has its own license or cloud of licenses. It looks like it's MIT but there's a copy of the GPL in the docs/ folder?? Look in the docs/ folder.
