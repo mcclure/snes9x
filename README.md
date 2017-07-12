@@ -80,3 +80,7 @@ The coop folder contains Luasocket. Here is its license:
 	DEALINGS IN THE SOFTWARE.
 
 SNES9X has its own license or cloud of licenses. It looks like it's MIT but there's a copy of the GPL in the docs/ folder?? Look in the docs/ folder.
+
+# Notes -- to be moved into a README-USAGE.md at some point
+
+Turning off the "frame display" requires pressing period.
