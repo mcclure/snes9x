@@ -1,9 +1,7 @@
 require "pl/init"
 require "socket"
-require "iuplua"
---local iup = package.loadlib ("iuplua51.dll", "luaopen_iuplua")
-print()
+require "ircdialog"
 
-iup.Message('YourApp','Finished Successfully!')
+ircdialog()
 
 print(pretty.write({1,2,3},''))
