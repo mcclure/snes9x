@@ -1,5 +1,4 @@
 require "pl/init"
-require "socket"
 require "ircdialog"
 
 -- UTIL
@@ -44,6 +43,76 @@ function printMessage()
 	end
 end
 
+-- STATE MACHINES
+
+class.Pipe()
+function Pipe:_init() end
+
+function Pipe:wake(server)
+	this.server = server
+
+	emu.registerexit(function()
+		this:exit()
+	end)
+
+	this:childWake()
+
+	gui.register(function()
+		if not this.dead then this:tick() end
+		printMessage()
+	end)
+end
+
+function Pipe:exit()
+	this.dead = true
+	this.server:close()
+	this.server:childExit()
+end
+
+function Pipe:fail(err)
+	this:exit()
+end
+
+function Pipe:send(s)
+	local res, err = this.server.send(s)
+	if not res then
+		error("Connection died: " .. s)
+		this:exit()
+		return false
+	end
+	return true
+end
+
+function Pipe:receive()
+	local result, err = this.server.receive("*l") -- Assume line based input for now
+	if not result then
+		error("Connection died: " .. s)
+		this.exit()
+		return false
+	end
+	return result
+end
+
+function Pipe:childWake() end
+function Pipe:childExit() end
+function Pipe:tick() end
+
+class.IrcPipe(Pipe)
+function IrcPipe:_init(data)
+	this.data = data
+end
+
+function IrcPipe:childWake()
+	this:send("NICK " .. this.data.nick .. "\n")
+end
+
+function IrcPipe:tick()
+	local test = this:receive()
+	print(test)
+end
+
+class.PumpMachine()
+
 -- PROGRAM
 
 local data = ircdialog()
@@ -62,8 +131,20 @@ elseif not nonempty(data.channel) then scrub("channel")
 elseif data.needkey and not nonempty(data.key) then scrub("Key")
 end
 
-message("OK")
-message("YES")
-message("DONE")
+function connect()
+	local socket = require "socket"
+	local server = socket.tcp()
+	result, err = socket.connect(data.server, data.port)
 
-gui.register(printMessage)
+	if not result then message("Could not connect to IRC: " .. err, true) failed = true return end
+
+	IrcPipe(data):wake(server)
+end
+
+if not failed then connect() end
+
+if failed then gui.register(printMessage) end
+
+if not failed then
+else
+end
