@@ -49,45 +49,45 @@ class.Pipe()
 function Pipe:_init() end
 
 function Pipe:wake(server)
-	this.server = server
+	self.server = server
 
 	emu.registerexit(function()
-		this:exit()
+		self:exit()
 	end)
 
-	this:childWake()
+	self:childWake()
 
 	gui.register(function()
-		if not this.dead then this:tick() end
+		if not self.dead then self:tick() end
 		printMessage()
 	end)
 end
 
 function Pipe:exit()
-	this.dead = true
-	this.server:close()
-	this.server:childExit()
+	self.dead = true
+	self.server:close()
+	self:childExit()
 end
 
 function Pipe:fail(err)
-	this:exit()
+	self:exit()
 end
 
 function Pipe:send(s)
-	local res, err = this.server.send(s)
+	local res, err = self.server:send(s)
 	if not res then
 		error("Connection died: " .. s)
-		this:exit()
+		self:exit()
 		return false
 	end
 	return true
 end
 
 function Pipe:receive()
-	local result, err = this.server.receive("*l") -- Assume line based input for now
+	local result, err = self.server:receive("*l") -- Assume line based input for now
 	if not result then
 		error("Connection died: " .. s)
-		this.exit()
+		self.exit()
 		return false
 	end
 	return result
@@ -99,15 +99,15 @@ function Pipe:tick() end
 
 class.IrcPipe(Pipe)
 function IrcPipe:_init(data)
-	this.data = data
+	self.data = data
 end
 
 function IrcPipe:childWake()
-	this:send("NICK " .. this.data.nick .. "\n")
+	self:send("NICK " .. self.data.nick .. "\n")
 end
 
 function IrcPipe:tick()
-	local test = this:receive()
+	local test = self:receive()
 	print(test)
 end
 
@@ -134,7 +134,7 @@ end
 function connect()
 	local socket = require "socket"
 	local server = socket.tcp()
-	result, err = socket.connect(data.server, data.port)
+	result, err = server:connect(data.server, data.port)
 
 	if not result then message("Could not connect to IRC: " .. err, true) failed = true return end
 

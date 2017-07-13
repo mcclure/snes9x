@@ -8,7 +8,7 @@ function ircdialog()
 		"Your nick: %s\n" ..
 		"Join: %o|Create new game|Enter key|\n" ..
 		"Key: %s\n"
-	    ,"irc.speedrunslive.net", 6667, "#mcc-test", "mcc2", 0, "")
+	    ,"irc.speedrunslive.com", 6667, "#mcc-test", "mcc2", 0, "")
 
 	if 0 == res then return nil end
 
