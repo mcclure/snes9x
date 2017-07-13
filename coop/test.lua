@@ -1,5 +1,7 @@
-require "pl/init"
+require "pl.init"
 require "ircdialog"
+
+local debug = true
 
 -- UTIL
 
@@ -46,10 +48,14 @@ end
 -- STATE MACHINES
 
 class.Pipe()
-function Pipe:_init() end
+function Pipe:_init()
+	self.buffer = ""
+end
 
 function Pipe:wake(server)
+	if debug then print("Connected") end
 	self.server = server
+	self.server:settimeout(0)
 
 	emu.registerexit(function()
 		self:exit()
@@ -64,6 +70,7 @@ function Pipe:wake(server)
 end
 
 function Pipe:exit()
+	if debug then print("Disconnecting") end
 	self.dead = true
 	self.server:close()
 	self:childExit()
@@ -74,7 +81,9 @@ function Pipe:fail(err)
 end
 
 function Pipe:send(s)
-	local res, err = self.server:send(s)
+	if debug then print("SEND: " .. s) end
+
+	local res, err = self.server:send(s .. "\r\n")
 	if not res then
 		error("Connection died: " .. s)
 		self:exit()
@@ -83,32 +92,59 @@ function Pipe:send(s)
 	return true
 end
 
-function Pipe:receive()
-	local result, err = self.server:receive("*l") -- Assume line based input for now
-	if not result then
-		error("Connection died: " .. s)
-		self.exit()
-		return false
+function Pipe:receivePump()
+	while true do -- Loop until no data left
+		local result, err = self.server:receive(1) -- Pull one byte
+		if not result then
+			if err ~= "timeout" then
+				error("Connection died: " .. s)
+				self.exit()
+			end
+			return
+		end
+
+		-- Got useful data
+		self.buffer = self.buffer .. result
+		if result == "\n" then -- Only 
+			self:handle(self.buffer)
+			self.buffer = ""
+		end
 	end
-	return result
+end
+
+function Pipe:tick()
+	self:receivePump()
+	self:childTick()
 end
 
 function Pipe:childWake() end
 function Pipe:childExit() end
-function Pipe:tick() end
+function Pipe:childTick() end
+function Pipe:handle() end
 
 class.IrcPipe(Pipe)
 function IrcPipe:_init(data)
+	self:super()
 	self.data = data
 end
 
 function IrcPipe:childWake()
-	self:send("NICK " .. self.data.nick .. "\n")
+	self:send("NICK " .. self.data.nick)
+	self:send("USER " .. self.data.nick .."-bot 8 * : " .. self.data.nick .. " (snes bot-- testing)")
 end
 
-function IrcPipe:tick()
-	local test = self:receive()
-	print(test)
+function IrcPipe:handle(s)
+	if debug then print("RECV: " .. s) end
+
+	splits = stringx.split(s, nil, 2)
+	local cmd, args = splits[1], splits[2]
+	if debug and cmd then print("CMD" .. cmd) end
+
+	if cmd == "PING" then
+		if debug then print("Handling ping") end
+
+		self:send("PONG " .. args)
+	end
 end
 
 class.PumpMachine()
