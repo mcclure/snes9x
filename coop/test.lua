@@ -129,9 +129,10 @@ local IrcHello = "!! Hi, I'm a matchmaking bot for SNES games. This user thinks 
 local IrcConfirm = "@@"
 
 class.IrcPipe(Pipe)
-function IrcPipe:_init(data)
+function IrcPipe:_init(data, driver)
 	self:super()
 	self.data = data
+	self.driver = driver
 	self.state = IrcState.login
 end
 
@@ -163,17 +164,17 @@ function IrcPipe:handle(s)
 		else
 			local partnerlen = #self.data.partner
 
-			if source:sub(1,partnerlen) == self.data.partner and source:sub(partnerlen+1, 1) == "!" then
+			if source:sub(1,partnerlen) == self.data.partner and source:sub(partnerlen+1, partnerlen+1) == "!" then
 				local splits2 = stringx.split(args, nil, 3)
-				if splits2[1] == "PRIVMSG" and splits2[2] == self.data.nick and splits3[3]:sub(1,1) == ":" then -- This is a message from the partner nick
-					local message = splits2[2]:sub(2)
-
+				if splits2[1] == "PRIVMSG" and splits2[2] == self.data.nick and splits2[3]:sub(1,1) == ":" then -- This is a message from the partner nick
+					local message = splits2[3]:sub(2)
+					
 					if self.state == IrcState.piping then       -- Message with payload
 						if message:sub(1,1) == "#" then
 							self.driver:handle(message:sub(2))
 						end
 					else                                        -- Handshake message
-						local prefix = message:sub(2)
+						local prefix = message:sub(1,2)
 						local exclaim = prefix == "!!"
 						local confirm = prefix == "@@" 
 						if exclaim or confirm then
@@ -219,16 +220,13 @@ function GameDriver:wake(pipe)
 end
 
 function GameDriver:handle(s)
-	print("DRIVER MESSAGE" .. s)
+	print("DRIVER MESSAGE " .. s)
 end
 
 -- PROGRAM
 
 local data = ircdialog()
 local failed = false
-
---print(pretty.write(data,''))
---gui.text(0, 0, pretty.write(data,''))
 
 function scrub(invalid) message(invalid .. " not valid", true) failed = true end
 
@@ -246,7 +244,7 @@ function connect()
 
 	if not result then message("Could not connect to IRC: " .. err, true) failed = true return end
 
-	IrcPipe(data):wake(server)
+	IrcPipe(data, GameDriver()):wake(server)
 end
 
 if not failed then connect() end
