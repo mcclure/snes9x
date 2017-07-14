@@ -1,6 +1,6 @@
 require "iuplua"
 
-function ircdialog()
+function ircDialog()
 	local res, server, port, nick, partner = iup.GetParam("Connection settings", nil,
 	    "Enter an IRC server: %s\n" ..
 		"IRC server port: %i\n" ..
@@ -11,4 +11,8 @@ function ircdialog()
 	if 0 == res then return nil end
 
 	return {server=server, port=port, nick=nick, partner=partner}
+end
+
+function refuseDialog()
+	iup.Message("Cannot run", "No ROM is running.")
 end
