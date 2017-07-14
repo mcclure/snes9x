@@ -97,7 +97,7 @@ function Pipe:receivePump()
 		local result, err = self.server:receive(1) -- Pull one byte
 		if not result then
 			if err ~= "timeout" then
-				error("Connection died: " .. s)
+				error("Connection died: " .. err)
 				self.exit()
 			end
 			return
@@ -122,10 +122,17 @@ function Pipe:childExit() end
 function Pipe:childTick() end
 function Pipe:handle() end
 
+-- TODO: nickserv, reconnect logic
+
+local IrcState = {login = 1, searching = 2, handshake = 3, piping = 4}
+local IrcHello = "!! Hi, I'm a matchmaking bot for SNES games. This user thinks you're running the same bot and typed in your nick. If you're a human and seeing this, they made a mistake!"
+local IrcConfirm = "@@"
+
 class.IrcPipe(Pipe)
 function IrcPipe:_init(data)
 	self:super()
 	self.data = data
+	self.state = IrcState.login
 end
 
 function IrcPipe:childWake()
@@ -138,16 +145,82 @@ function IrcPipe:handle(s)
 
 	splits = stringx.split(s, nil, 2)
 	local cmd, args = splits[1], splits[2]
-	if debug and cmd then print("CMD" .. cmd) end
 
-	if cmd == "PING" then
+	if cmd == "PING" then -- On "PING :msg" respond with "PONG :msg"
 		if debug then print("Handling ping") end
 
 		self:send("PONG " .. args)
+
+	elseif cmd:sub(1,1) == ":" then -- A message from a server or user
+		local source = cmd:sub(2)
+		if self.state == IrcState.login then
+			if source == self.data.nick then -- This is the initial mode set from the server, we are logged in
+				if debug then print("Logged in to server") end
+
+				self.state = IrcState.searching
+				self:whoisCheck()
+			end
+		else
+			local partnerlen = #self.data.partner
+
+			if source:sub(1,partnerlen) == self.data.partner and source:sub(partnerlen+1, 1) == "!" then
+				local splits2 = stringx.split(args, nil, 3)
+				if splits2[1] == "PRIVMSG" and splits2[2] == self.data.nick and splits3[3]:sub(1,1) == ":" then -- This is a message from the partner nick
+					local message = splits2[2]:sub(2)
+
+					if self.state == IrcState.piping then       -- Message with payload
+						if message:sub(1,1) == "#" then
+							self.driver:handle(message:sub(2))
+						end
+					else                                        -- Handshake message
+						local prefix = message:sub(2)
+						local exclaim = prefix == "!!"
+						local confirm = prefix == "@@" 
+						if exclaim or confirm then
+							if debug then print("Handshake finished") end
+
+							if exclaim then
+								self:msg(IrcConfirm)
+							end
+							self.state = IrcState.piping
+							self.driver:wake(self)
+						end
+					end
+				end
+
+			elseif self.state == IrcState.searching and source == self.data.server then
+				local splits2 = stringx.split(args, nil, 2)
+				local message = tonumber(splits2[1])
+				if message and message >= 311 and message <= 317 then -- This is a whois response
+					if debug then print("Whois response") end
+
+					self.state = IrcState.handshake
+					self:msg(IrcHello)
+				end 
+			end
+		end
 	end
 end
 
-class.PumpMachine()
+function IrcPipe:whoisCheck() -- TODO: Check on timer
+	self:send("WHOIS " .. self.data.partner)
+end
+
+function IrcPipe:msg(s)
+	self:send("PRIVMSG " .. self.data.partner .. " :" .. s)
+end
+
+class.GameDriver()
+function GameDriver:_init()
+end
+
+function GameDriver:wake(pipe)
+	self.pipe = pipe
+end
+
+function GameDriver:handle(s)
+	print("DRIVER MESSAGE" .. s)
+end
 
 -- PROGRAM
 
@@ -157,14 +230,13 @@ local failed = false
 --print(pretty.write(data,''))
 --gui.text(0, 0, pretty.write(data,''))
 
-function scrub(invalid) message(invalid .. " not valid", true) falied = true end
+function scrub(invalid) message(invalid .. " not valid", true) failed = true end
 
 if failed then -- NOTHING
 elseif not nonempty(data.server) then scrub("Server")
 elseif not nonzero(data.port) then scrub("Port")
 elseif not nonempty(data.nick) then scrub("Nick")
-elseif not nonempty(data.channel) then scrub("channel")
-elseif data.needkey and not nonempty(data.key) then scrub("Key")
+elseif not nonempty(data.partner) then scrub("Partner nick")
 end
 
 function connect()
