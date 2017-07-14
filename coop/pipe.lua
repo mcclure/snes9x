@@ -79,7 +79,7 @@ function Pipe:handle() end
 
 -- IRC
 
--- TODO: nickserv, reconnect logic
+-- TODO: nickserv, reconnect logic, multiline messages
 
 local IrcState = {login = 1, searching = 2, handshake = 3, piping = 4}
 local IrcHello = "!! Hi, I'm a matchmaking bot for SNES games. This user thinks you're running the same bot and typed in your nick. If you're a human and seeing this, they made a mistake!"
@@ -167,3 +167,34 @@ end
 function IrcPipe:msg(s)
 	self:send("PRIVMSG " .. self.data.partner .. " :" .. s)
 end
+
+-- Driver base class-- knows how to convert to/from tables
+
+driverDebug = true
+
+class.Driver()
+function Driver:_init() end
+
+function Driver:wake(pipe)
+	self.pipe = pipe
+	self:childWake()
+end
+
+function Driver:sendTable(t)
+	local s = pretty.write(t, '')
+	self.pipe:msg(s)
+end
+
+function Driver:handle(s)
+	local t, err = pretty.read(s)
+	if driverDebug then print("Driver got table " .. tostring(t)) end
+	if t then
+		self:handleTable(t)
+	else
+		self.handleFailure(s, err)
+	end
+end
+
+function Driver:childWake() end
+function Driver:handleTable(t) end
+function Driver:handleFailure(s, err) end
