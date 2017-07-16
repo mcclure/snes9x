@@ -6,7 +6,7 @@ local spec = {
 		[0x7EF340] = {name="Bow", kind="high"},
 		[0x7EF341] = {name="Boomerang", kind="high"},
 		[0x7EF342] = {name="Hookshot", kind="high"},
-		[0x7EF344] = {name="Mushroom or Powder", kind="high"},
+		[0x7EF344] = {nameMap={"Mushroom", "Magic Powder"}, kind="high"},
 		[0x7EF345] = {name="Fire Rod", kind="high"},
 		[0x7EF346] = {name="Ice Rod", kind="high"},
 		[0x7EF347] = {name="Bombos", kind="high"},
@@ -14,7 +14,7 @@ local spec = {
 		[0x7EF349] = {name="Quake", kind="high"},
 		[0x7EF34A] = {name="Lantern", kind="high"},
 		[0x7EF34B] = {name="Hammer", kind="high"},
-		[0x7EF34C] = {name="Shovel, Flute or Bird", kind="high"},
+		[0x7EF34C] = {nameMap={"Shovel", "Flute", "Bird"}, kind="high"},
 		[0x7EF34D] = {name="Net", kind="high"},
 		[0x7EF34E] = {name="Book", kind="high"},
 		[0x7EF34F] = {name="Bottle", kind="high"},
@@ -26,9 +26,9 @@ local spec = {
 		[0x7EF355] = {name="Boots", kind="high"},
 		[0x7EF356] = {name="Flippers", kind="high"},
 		[0x7EF357] = {name="Pearl", kind="high"},
-		[0x7EF359] = {name="better Sword", kind="high"},
-		[0x7EF35A] = {name="better Shield", kind="high"},
-		[0x7EF35B] = {name="better Armor", kind="high"},
+		[0x7EF359] = {nameMap={"Fighter's Sword", "Master Sword", "Tempered Sword", "Golden Sword"}, kind="high"},
+		[0x7EF35A] = {nameMap={"Shield", "Fire Shield", "Mirror Shield"}, kind="high"},
+		[0x7EF35B] = {nameMap={"Blue Armor", "Red Armor"}, kind="high"},
 		[0x7EF366] = {name="a Big Key", kind="bitOr"},
 		[0x7EF367] = {name="a Big Key", kind="bitOr"},
 		[0x7EF379] = {kind="bitOr"}, -- Abilities
@@ -40,6 +40,7 @@ local spec = {
 
 class.GameDriver(Driver)
 function GameDriver:_init()
+	self.sleepQueue = {}
 end
 
 function GameDriver:childWake()
@@ -71,29 +72,50 @@ end
 function GameDriver:handleTable(t)
 	local addr = t.addr
 	local record = spec.sync[t.addr]
-	if record and self:isRunning() then
-		local value = t.value
-		local allow = true
-		local currentValue = memory.readbyte(addr)
-
-		if record.kind == "high" then
-			allow = value > currentValue
-		elseif record.kind ~= "bitOr" then
-			allow = value == currentValue
-			value = OR(value, currentValue)
-		else
-			allow = value ~= currentValue
+	if self:isRunning() then
+		if #self.sleepQueue > 0 then
+			local sleepQueue = self.sleepQueue
+			self.sleepQueue = {}
+			for i, v in ipairs(sleepQueue) do
+				self:handleTable(v)
+			end
 		end
 
-		if allow then
-			if record.name then
-				message("Partner got " .. record.name)
+		if record then
+			local value = t.value
+			local allow = true
+			local previousValue = memory.readbyte(addr)
+
+			if record.kind == "high" then
+				allow = value > previousValue
+			elseif record.kind ~= "bitOr" then
+				allow = value == previousValue
+				value = OR(value, previousValue)
+			else
+				allow = value ~= previousValue
 			end
-			record.cache = value
-			memory.writebyte(addr, value)
+
+			if allow then
+				local name = record.name
+
+				if not name and record.nameMap
+					name = record.nameMap[value]
+				end
+
+				if name then
+					message("Partner got " .. record.name)
+				else
+					if driverDebug then print("Updated anonymous address " .. tostring(addr) .. " to " .. tostring(value)) end
+				end
+				record.cache = value
+				memory.writebyte(addr, value)
+			end
+		else
+			message("Partner changed unknown memory address...? Maybe something's broken.")
 		end
 	else
-		message("Partner changed unknown memory address...? Maybe something's broken.")
+		if driverDebug then print("Queueing partner memory write because the game is not running") end
+		table.insert(self.sleepQueue, t)
 	end
 end
 
