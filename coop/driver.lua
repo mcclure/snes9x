@@ -1,8 +1,11 @@
 -- ACTUAL WORK HAPPENS HERE
 
-local SyncTypes = {Equal = 1, High = 2}
-local syncTable = {
-	[0x7EF34A] = {name="Lantern", kind=SyncTypes.High}
+local SyncType = {Equal = 1, High = 2}
+local spec = {
+	running = {addr = 0x7E0010, gte = 0x6},
+	sync = {
+		[0x7EF34A] = {name="Lantern", kind=SyncType.High}
+	}
 }
 
 class.GameDriver(Driver)
@@ -10,24 +13,29 @@ function GameDriver:_init()
 end
 
 function GameDriver:childWake()
-	for k,v in pairs(syncTable) do
+	for k,v in pairs(spec.sync) do
 		memory.registerwrite (k, 1, function(a,b) self:memoryWrite(a,b,v) end)
 	end
 end
 
 function GameDriver:memoryWrite(addr, value, record)
-	if not record.cache or record.cache ~= value then
-		record.cache = value -- FIXME: Is this "changed" check redundant?
+	local running = spec.running
 
-		self:sendTable({addr=addr, value=value})
+	if not running or memory.readbyte(running.addr) >= running.gte then
+		if not record.cache or record.cache ~= value then
+			record.cache = value -- FIXME: Is this "changed" check redundant?
+
+			self:sendTable({addr=addr, value=value})
+		end
+	else
+		if driverDebug then print("Ignored memory write because the game is not running") end
 	end
 end
 
 function GameDriver:handleTable(t)
 	local addr = t.addr
-	local record = syncTable[t.addr]
-	if record then
-		print("TEST REMOVE THIS")
+	local record = spec.sync[t.addr]
+	if record then -- TODO honor SyncType
 		local value = t.value
 		message("Partner got " .. record.name)
 		record.cache = value

@@ -1,4 +1,8 @@
-require "pl.init"
+class   = require "pl.class"
+pretty  = require "pl.pretty"
+List    = require "pl.list"
+stringx = require "pl.stringx"
+
 require "util"
 require "ircdialog"
 require "pipe"

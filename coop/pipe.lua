@@ -182,7 +182,7 @@ end
 
 function Driver:sendTable(t)
 	local s = pretty.write(t, '')
-	self.pipe:msg(s)
+	self.pipe:msg("#" .. s)
 end
 
 function Driver:handle(s)
