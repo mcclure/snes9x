@@ -9,6 +9,7 @@ end
 
 function Pipe:wake(server)
 	if debug then print("Connected") end
+	statusMessage("Logging in to server...") -- This creates an unfortunate implicit contract where the driver needs to statusMessage(nil)
 	self.server = server
 	self.server:settimeout(0)
 
@@ -40,7 +41,7 @@ function Pipe:send(s)
 
 	local res, err = self.server:send(s .. "\r\n")
 	if not res then
-		error("Connection died: " .. s)
+		errorMessage("Connection died: " .. s)
 		self:exit()
 		return false
 	end
@@ -52,7 +53,7 @@ function Pipe:receivePump()
 		local result, err = self.server:receive(1) -- Pull one byte
 		if not result then
 			if err ~= "timeout" then
-				error("Connection died: " .. err)
+				errorMessage("Connection died: " .. err)
 				self.exit()
 			end
 			return
@@ -98,6 +99,10 @@ function IrcPipe:childWake()
 	self:send("USER " .. self.data.nick .."-bot 8 * : " .. self.data.nick .. " (snes bot-- testing)")
 end
 
+function IrcPipe:ChildTick()
+	self.driver:tick()
+end
+
 function IrcPipe:handle(s)
 	if debug then print("RECV: " .. s) end
 
@@ -124,34 +129,41 @@ function IrcPipe:handle(s)
 			if source:sub(1,partnerlen) == self.data.partner and source:sub(partnerlen+1, partnerlen+1) == "!" then
 				local splits2 = stringx.split(args, nil, 3)
 				if splits2[1] == "PRIVMSG" and splits2[2] == self.data.nick and splits2[3]:sub(1,1) == ":" then -- This is a message from the partner nick
-					local message = splits2[3]:sub(2)
+					local msg = splits2[3]:sub(2)
 					
 					if self.state == IrcState.piping then       -- Message with payload
-						if message:sub(1,1) == "#" then
-							self.driver:handle(message:sub(2))
+						if msg:sub(1,1) == "#" then
+							self.driver:handle(msg:sub(2))
 						end
 					else                                        -- Handshake message
-						local prefix = message:sub(1,2)
+						local prefix = msg:sub(1,2)
 						local exclaim = prefix == "!!"
 						local confirm = prefix == "@@" 
 						if exclaim or confirm then
 							if debug then print("Handshake finished") end
+							statusMessage(nil)
+							message("Connected to partner")
 
 							if exclaim then
 								self:msg(IrcConfirm)
 							end
 							self.state = IrcState.piping
 							self.driver:wake(self)
+						elseif msg:sub(1,1) == "#" then
+							errorMessage("Tried to connect, but your partner is already playing the game! Try resetting?")
+						else
+							errorMessage("Your partner's emulator responded in... English? You probably typed the wrong nick!")
 						end
 					end
 				end
 
 			elseif self.state == IrcState.searching and source == self.data.server then
 				local splits2 = stringx.split(args, nil, 2)
-				local message = tonumber(splits2[1])
-				if message and message >= 311 and message <= 317 then -- This is a whois response
+				local msg = tonumber(splits2[1])
+				if msg and msg >= 311 and msg <= 317 then -- This is a whois response
 					if debug then print("Whois response") end
 
+					statusMessage("Connecting to partner...")
 					self.state = IrcState.handshake
 					self:msg(IrcHello)
 				end 
@@ -162,6 +174,7 @@ end
 
 function IrcPipe:whoisCheck() -- TODO: Check on timer
 	self:send("WHOIS " .. self.data.partner)
+	statusMessage("Searching for partner...")
 end
 
 function IrcPipe:msg(s)
@@ -195,6 +208,11 @@ function Driver:handle(s)
 	end
 end
 
+function Driver:tick()
+	self:childTick()
+end
+
 function Driver:childWake() end
+function Driver:childTick() end
 function Driver:handleTable(t) end
 function Driver:handleFailure(s, err) end

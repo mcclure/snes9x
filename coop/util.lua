@@ -18,11 +18,19 @@ function message(msg, isError)
 	end
 end
 
+function statusMessage(msg)
+	message(msg, true)
+end
+
+function errorMessage(msg)
+	message(msg and "Error: " .. msg, true)
+end
+
 -- Callback to print the current error message
 function printMessage()
 	local msg = null
 	if currentError then
-		msg = "Error: " .. currentError
+		msg = currentError
 	else
 		while currentMessages:len() > 0 do
 			local messageRecord = currentMessages[#currentMessages]

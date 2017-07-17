@@ -1,7 +1,7 @@
 -- ACTUAL WORK HAPPENS HERE
 
 local spec = {
-	running = {addr = 0x7E0010, gte = 0x6},
+	running = {addr = 0x7E0010, gte = 0x6}, -- BUT NOT 0x14! Or higher?
 	sync = {
 		[0x7EF340] = {name="Bow", kind="high"},
 		[0x7EF341] = {name="Boomerang", kind="high"},
@@ -43,6 +43,16 @@ function GameDriver:_init()
 	self.sleepQueue = {}
 end
 
+function GameDriver:childTick()
+	if #self.sleepQueue > 0 and self:isRunning() then
+		local sleepQueue = self.sleepQueue
+		self.sleepQueue = {}
+		for i, v in ipairs(sleepQueue) do
+			self:handleTable(v)
+		end
+	end
+end
+
 function GameDriver:childWake()
 	for k,v in pairs(spec.sync) do
 		memory.registerwrite (k, 1, function(a,b) self:memoryWrite(a,b,v) end)
@@ -55,11 +65,13 @@ function GameDriver:isRunning()
 	return not running or memory.readbyte(running.addr) >= running.gte
 end
 
-function GameDriver:memoryWrite(addr, value, record)
+function GameDriver:memoryWrite(addr, arg2, record)
 	local running = spec.running
 
-	if self:isRunning() then
+	if self:isRunning() then -- TODO: Yes, we got record, but double check
 		if not record.cache or record.cache ~= value then -- TODO: Check high/bitOr also?
+			print("SILLY DEBUG " .. memory.readbyte(running.addr))
+			local value = memory.readbyte(addr)
 			record.cache = value -- FIXME: Is this "changed" check redundant?
 
 			self:sendTable({addr=addr, value=value})
@@ -71,16 +83,8 @@ end
 
 function GameDriver:handleTable(t)
 	local addr = t.addr
-	local record = spec.sync[t.addr]
+	local record = spec.sync[addr]
 	if self:isRunning() then
-		if #self.sleepQueue > 0 then
-			local sleepQueue = self.sleepQueue
-			self.sleepQueue = {}
-			for i, v in ipairs(sleepQueue) do
-				self:handleTable(v)
-			end
-		end
-
 		if record then
 			local value = t.value
 			local allow = true
@@ -89,8 +93,9 @@ function GameDriver:handleTable(t)
 			if record.kind == "high" then
 				allow = value > previousValue
 			elseif record.kind ~= "bitOr" then
-				allow = value == previousValue
+				print("SILLY BIT OR DEBUG: Previous value " .. tostring(previousValue) .. " set value " .. tostring(value) .. " final value " .. tostring(OR(value, previousValue)) )
 				value = OR(value, previousValue)
+				allow = value ~= previousValue
 			else
 				allow = value ~= previousValue
 			end
@@ -98,12 +103,12 @@ function GameDriver:handleTable(t)
 			if allow then
 				local name = record.name
 
-				if not name and record.nameMap
+				if not name and record.nameMap then
 					name = record.nameMap[value]
 				end
 
 				if name then
-					message("Partner got " .. record.name)
+					message("Partner got " .. name)
 				else
 					if driverDebug then print("Updated anonymous address " .. tostring(addr) .. " to " .. tostring(value)) end
 				end
@@ -111,7 +116,8 @@ function GameDriver:handleTable(t)
 				memory.writebyte(addr, value)
 			end
 		else
-			message("Partner changed unknown memory address...? Maybe something's broken.")
+			if driverDebug then print("Unknown memory address was " .. tostring(addr) .. " (" .. type(addr) .. ") record " .. tostring(spec.sync[addr])) end
+			message("Partner changed unknown memory address...? Uh oh")
 		end
 	else
 		if driverDebug then print("Queueing partner memory write because the game is not running") end

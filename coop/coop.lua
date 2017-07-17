@@ -14,7 +14,7 @@ if emu.emulating() then
 	local data = ircDialog()
 	local failed = false
 
-	function scrub(invalid) message(invalid .. " not valid", true) failed = true end
+	function scrub(invalid) errorMessage(invalid .. " not valid") failed = true end
 
 	if failed then -- NOTHING
 	elseif not nonempty(data.server) then scrub("Server")
@@ -28,8 +28,9 @@ if emu.emulating() then
 		local server = socket.tcp()
 		result, err = server:connect(data.server, data.port)
 
-		if not result then message("Could not connect to IRC: " .. err, true) failed = true return end
+		if not result then errorMessage("Could not connect to IRC: " .. err) failed = true return end
 
+		statusMessage("Connecting to server...")
 		IrcPipe(data, GameDriver()):wake(server)
 	end
 
