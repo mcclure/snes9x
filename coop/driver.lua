@@ -1,7 +1,7 @@
 -- ACTUAL WORK HAPPENS HERE
 
 local spec = {
-	running = {addr = 0x7E0010, gte = 0x6}, -- BUT NOT 0x14! Or higher?
+	running = {"test", addr = 0x7E0010, gte = 0x6, lte = 0x13},
 	sync = {
 		[0x7EF340] = {name="Bow", kind="high"},
 		[0x7EF341] = {name="Boomerang", kind="high"},
@@ -38,6 +38,20 @@ local spec = {
 	}
 }
 
+function recordChanged(record, value, previousValue)
+	local allow = true
+	if record.kind == "high" then
+		allow = value > previousValue
+	elseif record.kind ~= "bitOr" then
+		print("SILLY BIT OR DEBUG: Previous value " .. tostring(previousValue) .. " set value " .. tostring(value) .. " final value " .. tostring(OR(value, previousValue)) )
+		value = OR(value, previousValue)
+		allow = value ~= previousValue
+	else
+		allow = value ~= previousValue
+	end
+	return allow, value
+end
+
 class.GameDriver(Driver)
 function GameDriver:_init()
 	self.sleepQueue = {}
@@ -55,24 +69,33 @@ end
 
 function GameDriver:childWake()
 	for k,v in pairs(spec.sync) do
-		memory.registerwrite (k, 1, function(a,b) self:memoryWrite(a,b,v) end)
+		memory.registerwrite (k, 1, function(a,b) if a==k then self:memoryWrite(a,b,v) end end)
 	end
 end
 
 function GameDriver:isRunning()
 	local running = spec.running
+	if not running then return true end
 
-	return not running or memory.readbyte(running.addr) >= running.gte
+	local value = memory.readbyte(running.addr)
+	return (not running.gte or value >= running.gte) and
+		   (not running.lte or value <= running.lte)
 end
 
 function GameDriver:memoryWrite(addr, arg2, record)
 	local running = spec.running
 
 	if self:isRunning() then -- TODO: Yes, we got record, but double check
-		if not record.cache or record.cache ~= value then -- TODO: Check high/bitOr also?
+		local allow = true
+		local value = memory.readbyte(addr)
+
+		if record.cache then
+			allow = recordChanged(record, value, record.cache)
+		end
+
+		if allow then -- TODO: Check high/bitOr also?
 			print("SILLY DEBUG " .. memory.readbyte(running.addr))
-			local value = memory.readbyte(addr)
-			record.cache = value -- FIXME: Is this "changed" check redundant?
+			record.cache = value -- FIXME: Should this cache EVER be cleared? What about when a new game starts?
 
 			self:sendTable({addr=addr, value=value})
 		end
@@ -90,9 +113,11 @@ function GameDriver:handleTable(t)
 			local allow = true
 			local previousValue = memory.readbyte(addr)
 
+			allow, value = recordChanged(record, value, previousValue)
+
 			if record.kind == "high" then
 				allow = value > previousValue
-			elseif record.kind ~= "bitOr" then
+			elseif record.kind == "bitOr" then
 				print("SILLY BIT OR DEBUG: Previous value " .. tostring(previousValue) .. " set value " .. tostring(value) .. " final value " .. tostring(OR(value, previousValue)) )
 				value = OR(value, previousValue)
 				allow = value ~= previousValue

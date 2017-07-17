@@ -99,7 +99,7 @@ function IrcPipe:childWake()
 	self:send("USER " .. self.data.nick .."-bot 8 * : " .. self.data.nick .. " (snes bot-- testing)")
 end
 
-function IrcPipe:ChildTick()
+function IrcPipe:childTick()
 	self.driver:tick()
 end
 
