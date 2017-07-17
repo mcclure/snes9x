@@ -17,7 +17,7 @@ local spec = {
 		[0x7EF34C] = {nameMap={"Shovel", "Flute", "Bird"}, kind="high"},
 		[0x7EF34D] = {name="Net", kind="high"},
 		[0x7EF34E] = {name="Book", kind="high"},
-		[0x7EF34F] = {name="Bottle", kind="high"},
+		[0x7EF34F] = {kind="high"}, -- Bottle count
 		[0x7EF350] = {name="Red Cane", kind="high"},
 		[0x7EF351] = {name="Blue Cane", kind="high"},
 		[0x7EF352] = {name="Cape", kind="high"},
@@ -29,6 +29,10 @@ local spec = {
 		[0x7EF359] = {nameMap={"Fighter's Sword", "Master Sword", "Tempered Sword", "Golden Sword"}, kind="high"},
 		[0x7EF35A] = {nameMap={"Shield", "Fire Shield", "Mirror Shield"}, kind="high"},
 		[0x7EF35B] = {nameMap={"Blue Armor", "Red Armor"}, kind="high"},
+		[0x7EF35C] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}}, -- Only change contents when acquiring new *empty* bottle
+		[0x7EF35D] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
+		[0x7EF35E] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
+		[0x7EF35F] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
 		[0x7EF366] = {name="a Big Key", kind="bitOr"},
 		[0x7EF367] = {name="a Big Key", kind="bitOr"},
 		[0x7EF379] = {kind="bitOr"}, -- Abilities
@@ -42,14 +46,24 @@ function recordChanged(record, value, previousValue)
 	local allow = true
 	if record.kind == "high" then
 		allow = value > previousValue
-	elseif record.kind ~= "bitOr" then
-		print("SILLY BIT OR DEBUG: Previous value " .. tostring(previousValue) .. " set value " .. tostring(value) .. " final value " .. tostring(OR(value, previousValue)) )
+	elseif record.kind == "bitOr" then
 		value = OR(value, previousValue)
 		allow = value ~= previousValue
 	else
 		allow = value ~= previousValue
 	end
+	if allow and record.cond then
+		allow = performTest(record.cond, value)
+	end
 	return allow, value
+end
+
+function performTest(record, valueOverride)
+	if not record then return true end
+
+	local value = valueOverride or memory.readbyte(record.addr)
+	return (not record.gte or value >= record.gte) and
+		   (not record.lte or value <= record.lte)
 end
 
 class.GameDriver(Driver)
@@ -74,12 +88,7 @@ function GameDriver:childWake()
 end
 
 function GameDriver:isRunning()
-	local running = spec.running
-	if not running then return true end
-
-	local value = memory.readbyte(running.addr)
-	return (not running.gte or value >= running.gte) and
-		   (not running.lte or value <= running.lte)
+	return performTest(spec.running)
 end
 
 function GameDriver:memoryWrite(addr, arg2, record)
@@ -94,7 +103,6 @@ function GameDriver:memoryWrite(addr, arg2, record)
 		end
 
 		if allow then -- TODO: Check high/bitOr also?
-			print("SILLY DEBUG " .. memory.readbyte(running.addr))
 			record.cache = value -- FIXME: Should this cache EVER be cleared? What about when a new game starts?
 
 			self:sendTable({addr=addr, value=value})
@@ -114,16 +122,6 @@ function GameDriver:handleTable(t)
 			local previousValue = memory.readbyte(addr)
 
 			allow, value = recordChanged(record, value, previousValue)
-
-			if record.kind == "high" then
-				allow = value > previousValue
-			elseif record.kind == "bitOr" then
-				print("SILLY BIT OR DEBUG: Previous value " .. tostring(previousValue) .. " set value " .. tostring(value) .. " final value " .. tostring(OR(value, previousValue)) )
-				value = OR(value, previousValue)
-				allow = value ~= previousValue
-			else
-				allow = value ~= previousValue
-			end
 
 			if allow then
 				local name = record.name
