@@ -6,7 +6,7 @@ function ircDialog()
 		"IRC server port: %i\n" ..
 		"Your nick: %s\n" ..
 		"Partner nick: %s\n"
-	    ,"irc.speedrunslive.com", 6667, "mcc2", "")
+	    ,"irc.speedrunslive.com", 6667, "", "")
 
 	if 0 == res then return nil end
 
