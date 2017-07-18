@@ -26,7 +26,9 @@ local spec = {
 		[0x7EF355] = {name="Boots", kind="high"},
 		[0x7EF356] = {name="Flippers", kind="high"},
 		[0x7EF357] = {name="Pearl", kind="high"},
-		[0x7EF359] = {nameMap={"Fighter's Sword", "Master Sword", "Tempered Sword", "Golden Sword"}, kind="high"},
+		[0x7EF359] = {nameMap={"Fighter's Sword", "Master Sword", "Tempered Sword", "Golden Sword"}, kind="high",
+			cond={"test", gte = 0x1, lte = 0x4} -- Avoid 0xFF trap during dwarf quest
+		},
 		[0x7EF35A] = {nameMap={"Shield", "Fire Shield", "Mirror Shield"}, kind="high"},
 		[0x7EF35B] = {nameMap={"Blue Armor", "Red Armor"}, kind="high"},
 		[0x7EF35C] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}}, -- Only change contents when acquiring new *empty* bottle
@@ -102,7 +104,7 @@ function GameDriver:memoryWrite(addr, arg2, record)
 			allow = recordChanged(record, value, record.cache)
 		end
 
-		if allow then -- TODO: Check high/bitOr also?
+		if allow then
 			record.cache = value -- FIXME: Should this cache EVER be cleared? What about when a new game starts?
 
 			self:sendTable({addr=addr, value=value})
