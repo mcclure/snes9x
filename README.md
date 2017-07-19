@@ -15,7 +15,9 @@ The bits that make this work are pure Lua and are contained entirely in the "coo
 
 ## How to build for testing
 
-Open the solution file in win32/ and build and run.
+Install the Cg toolkit from Nvidia's website.
+
+Then open the solution file in win32/ and build and run.
 
 ## How to build for install
 
