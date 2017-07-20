@@ -2,11 +2,28 @@
 
 function recordChanged(record, value, previousValue)
 	local allow = true
-	if record.kind == "high" then
+	print({"TESTING WITH", record=record})
+
+	if type(record.kind) == "function" then
+		allow, value = record(value, previousValue)
+	elseif record.kind == "high" then
 		allow = value > previousValue
 	elseif record.kind == "bitOr" then
-		value = OR(value, previousValue)
-		allow = value ~= previousValue
+		local maskedValue         = value                        -- Backup value and previousValue
+		local maskedPreviousValue = previousValue
+
+		print({"Inside recordChanged", value=value, previousValue=previousValue, maskedValue=maskedValue, maskedPreviousValue=maskedPreviousValue, record=record})
+
+		if record.mask then                                      -- If necessary, mask both before checking
+			maskedValue = AND(maskedValue, record.mask)
+			maskedPreviousValue = AND(maskedPreviousValue, record.mask)
+		end
+
+		maskedValue = OR(maskedValue, maskedPreviousValue)
+
+		allow = maskedValue ~= maskedPreviousValue               -- Did operated-on bits change?
+		value = OR(previousValue, maskedValue)                   -- Copy operated-on bits back into value
+		print({"Inside recordChanged2", value=value, previousValue=previousValue, maskedValue=maskedValue, maskedPreviousValue=maskedPreviousValue, allow=allow})
 	else
 		allow = value ~= previousValue
 	end
@@ -99,13 +116,27 @@ function GameDriver:handleTable(t)
 
 			if allow then
 				local name = record.name
+				local names = nil
 
 				if not name and record.nameMap then
 					name = record.nameMap[value]
 				end
 
 				if name then
-					message("Partner got " .. name)
+					names = {name}
+				elseif record.nameBitmap then
+					names = {}
+					for b=0,7 do
+						if 0 ~= AND(BIT(b), value) and 0 == AND(BIT(b), previousValue) then
+							table.insert(names, record.nameBitmap[b + 1])
+						end
+					end
+				end
+
+				if names then
+					for i, v in ipairs(names) do
+						message("Partner got " .. name)
+					end
 				else
 					if driverDebug then print("Updated anonymous address " .. tostring(addr) .. " to " .. tostring(value)) end
 				end

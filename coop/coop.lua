@@ -53,7 +53,7 @@ if emu.emulating() then
 				if not result then errorMessage("Could not connect to IRC: " .. err) failed = true return end
 
 				statusMessage("Connecting to server...")
-				IrcPipe(data, GameDriver()):wake(server)
+				IrcPipe(data, GameDriver(spec)):wake(server)
 			end
 
 			if not failed then connect() end
