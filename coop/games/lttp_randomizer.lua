@@ -82,7 +82,7 @@ return {
 		[0x7EF35D] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
 		[0x7EF35E] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
 		[0x7EF35F] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
-		[0x7EF366] = {name="a Big Key", kind="bitOr"},
+		[0x7EF366] = {name="a Big Key", kind="bitOr"}, -- FIXME: Hyrule Castle big key does not seem to be in either of these masks, which could affect open seeds?
 		[0x7EF367] = {name="a Big Key", kind="bitOr"},
 		[0x7EF379] = {kind="bitOr"}, -- Abilities
 		[0x7EF374] = {name="a Pendant", kind="bitOr"},

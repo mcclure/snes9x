@@ -24,10 +24,10 @@ function selectDialog(specs, reason)
 	local res, selection = iup.GetParam("Select game", nil,
 	    "Can't figure out\rwhich game to load\r(" .. reason .. ")\r" ..
 	    "Which game is this? " ..
-		"%o|" .. names .. "\n",
+		"%l|" .. names .. "\n",
 		0)
 
-	if 0 == res then return nil end
+	if 0 == res or nil == selection then return nil end
 
 	return specs[selection + 1]
 end

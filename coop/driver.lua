@@ -46,7 +46,7 @@ function performTest(record, valueOverride)
 		local addr = record.addr
 
 		for i=1,len do
-			if string.byte(test, i) ~= memory.readbyte(addr + i) then
+			if string.byte(test, i) ~= memory.readbyte(addr + i - 1) then
 				return false
 			end
 		end
