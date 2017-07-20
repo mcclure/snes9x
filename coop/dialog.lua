@@ -13,6 +13,25 @@ function ircDialog()
 	return {server=server, port=port, nick=nick, partner=partner}
 end
 
-function refuseDialog()
+function selectDialog(specs, reason)
+	local names = ""
+	for i, v in ipairs(specs) do
+		names = names .. v.name .. "|"
+	end
+
+	print(names)
+
+	local res, selection = iup.GetParam("Select game", nil,
+	    "Can't figure out\rwhich game to load\r(" .. reason .. ")\r" ..
+	    "Which game is this? " ..
+		"%o|" .. names .. "\n",
+		0)
+
+	if 0 == res then return nil end
+
+	return specs[selection + 1]
+end
+
+function refuseDialog(options)
 	iup.Message("Cannot run", "No ROM is running.")
 end
