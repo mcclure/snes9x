@@ -5,7 +5,7 @@ function recordChanged(record, value, previousValue)
 	print({"TESTING WITH", record=record})
 
 	if type(record.kind) == "function" then
-		allow, value = record(value, previousValue)
+		allow, value = record.kind(value, previousValue)
 	elseif record.kind == "high" then
 		allow = value > previousValue
 	elseif record.kind == "bitOr" then
@@ -135,7 +135,7 @@ function GameDriver:handleTable(t)
 
 				if names then
 					for i, v in ipairs(names) do
-						message("Partner got " .. name)
+						message("Partner got " .. v)
 					end
 				else
 					if driverDebug then print("Updated anonymous address " .. tostring(addr) .. " to " .. tostring(value)) end

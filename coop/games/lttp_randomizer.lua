@@ -12,6 +12,14 @@ function UNSET(x, bit) -- 0 index
 	return AND(x, XOR(0xFF, BIT(bit)))
 end
 
+function zeroRising(value, previousValue) -- "Allow if replacing 'no item', but not if replacing another item"
+	return (value ~= 0 and previousValue == 0), (value)
+end
+
+function zeroRisingOrUpgradeFlute(value, previousValue)
+	return ( (value ~= 0 and previousValue == 0) or (value == 2 and previousValue == 1) ), (value)
+end
+
 return {
 	guid = "f080c17d-3410-4294-b412-21f8babeee6b",
 	name = "Link to the Past Randomizer",
@@ -21,12 +29,12 @@ return {
 	sync = {
 		-- INVENTORY_SWAP
 		[0x7EF412] = {
-			nameBitmap={"Flute", "Bird", "Shovel", "unknown item", "Magic Powder", "Mushroom", "Magic Boomerang", "Boomerang"},
+			nameBitmap={"Bird", "Flute", "Shovel", "unknown item", "Magic Powder", "Mushroom", "Magic Boomerang", "Boomerang"},
 			kind=function(value, previousValue)
 				local result = OR(value, previousValue)
 				print ("INVENTORY BYTE: INITIAL OR: " .. tostring(result))
 				if 0 ~= AND(result, BIT(0)) then result = UNSET(result, 1) print("BIRD") end -- If acquired bird, clear flute
-				if 0 ~= AND(result, BIT(4)) then result = UNSET(result, 5) print("POWDER") end -- If acquired powder, clear mushroom
+				-- if 0 ~= AND(result, BIT(4)) then result = UNSET(result, 5) print("POWDER") end -- Should do SOMETHING with mushroom so it can be "lost", but I'm not sure what
 				print ("INVENTORY BYTE: FINAL OR: " .. tostring(result))
 				return (result ~= previousValue), (result) 
 			end
@@ -40,7 +48,7 @@ return {
 
 		-- NPC_FLAGS
 		[0x7EF410] = {
-			nameBitmap={"an old man home safe"},
+			nameBitmap={"an old man home"},
 			mask=0x1, -- Only sync old man
 			kind="bitOr"
 		},
@@ -50,10 +58,12 @@ return {
 			kind="high" -- Sync silently-- this is a backup in case your shield gets eaten
 		},
 
-		-- [0x7EF340] = {nameMap={"Bow", "Bow", "Silver Arrows", "Silver Arrows"}, kind="high"}, -- This lives in INVENTORY_SWAP_2
-		-- [0x7EF341] = {name="Boomerang", kind="high"},                                         -- This lives in INVENTORY_SWAP
+		[0x7EF340] = {kind=zeroRising},                     -- Bows, tracked in INVENTORY_SWAP_2 but must be nonzero to appear in inventory
+		[0x7EF341] = {kind=zeroRising},                     -- Boomerangs, tracked in INVENTORY_SWAP
 		[0x7EF342] = {name="Hookshot", kind="high"},
-		-- [0x7EF344] = {nameMap={"Mushroom", "Magic Powder"}, kind="high"},                     -- This lives in INVENTORY_SWAP
+		-- FIXME: Using "high" here means that if you're holding the Mushroom and the other player gets the Powder, the Mushroom will be replaced in their hand.
+		-- Unfortunately, if we use "zeroRising", we get a worse bug: Collecting Powder after the other player gets *and gives away* Mushroom results in no item transfer.
+		[0x7EF344] = {kind="high"},                         -- Powder/mushroom, tracked in INVENTORY_SWAP
 		[0x7EF345] = {name="Fire Rod", kind="high"},
 		[0x7EF346] = {name="Ice Rod", kind="high"},
 		[0x7EF347] = {name="Bombos", kind="high"},
@@ -61,7 +71,7 @@ return {
 		[0x7EF349] = {name="Quake", kind="high"},
 		[0x7EF34A] = {name="Lantern", kind="high"},
 		[0x7EF34B] = {name="Hammer", kind="high"},
-		-- [0x7EF34C] = {nameMap={"Shovel", "Flute", "Bird"}, kind="high"},                      -- This lives in INVENTORY_SWAP
+		[0x7EF34C] = {kind=zeroRisingOrUpgradeFlute},       -- Shovel flute etc, tracked in INVENTORY_SWAP
 		[0x7EF34D] = {name="Net", kind="high"},
 		[0x7EF34E] = {name="Book", kind="high"},
 		[0x7EF34F] = {kind="high"}, -- Bottle count
@@ -78,10 +88,10 @@ return {
 		},
 		[0x7EF35A] = {nameMap={"Shield", "Fire Shield", "Mirror Shield"}, kind="high"},
 		[0x7EF35B] = {nameMap={"Blue Armor", "Red Armor"}, kind="high"},
-		[0x7EF35C] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}}, -- Only change contents when acquiring new *empty* bottle
-		[0x7EF35D] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
-		[0x7EF35E] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
-		[0x7EF35F] = {name="Bottle", kind="high", cond={"test", lte = 0x2, gte = 0x2}},
+		[0x7EF35C] = {name="Bottle", kind=zeroRising}, -- Only change contents when acquiring new *empty* bottle
+		[0x7EF35D] = {name="Bottle", kind=zeroRising},
+		[0x7EF35E] = {name="Bottle", kind=zeroRising},
+		[0x7EF35F] = {name="Bottle", kind=zeroRising},
 		[0x7EF366] = {name="a Big Key", kind="bitOr"}, -- FIXME: Hyrule Castle big key does not seem to be in either of these masks, which could affect open seeds?
 		[0x7EF367] = {name="a Big Key", kind="bitOr"},
 		[0x7EF379] = {kind="bitOr"}, -- Abilities
