@@ -4,7 +4,7 @@ List    = require "pl.list"
 stringx = require "pl.stringx"
 
 require "util"
-require "games.index"
+require "modes.index"
 require "dialog"
 require "pipe"
 require "driver"
@@ -12,7 +12,7 @@ require "driver"
 -- PROGRAM
 
 if emu.emulating() then
-	local spec = nil
+	local spec = nil -- Mode specification
 	local specOptions = {}
 	for i,v in ipairs(games) do
 		if performTest(v.match) then
