@@ -8,17 +8,19 @@
 -- Thanks to the Zelda randomizer team, especially Mike Trethewey, Zarby89 and Karkat
 -- This file is available under Creative Commons CC0 
 
-function UNSET(x, bit) -- 0 index
+local function UNSET(x, bit) -- 0 index
 	return AND(x, XOR(0xFF, BIT(bit)))
 end
 
-function zeroRising(value, previousValue) -- "Allow if replacing 'no item', but not if replacing another item"
+local function zeroRising(value, previousValue) -- "Allow if replacing 'no item', but not if replacing another item"
 	return (value ~= 0 and previousValue == 0), (value)
 end
 
-function zeroRisingOrUpgradeFlute(value, previousValue)
+local function zeroRisingOrUpgradeFlute(value, previousValue)
 	return ( (value ~= 0 and previousValue == 0) or (value == 2 and previousValue == 1) ), (value)
 end
+
+local mushroomByte = 0x7EF344
 
 return {
 	guid = "f080c17d-3410-4294-b412-21f8babeee6b",
@@ -32,11 +34,19 @@ return {
 			nameBitmap={"Bird", "Flute", "Shovel", "unknown item", "Magic Powder", "Mushroom", "Magic Boomerang", "Boomerang"},
 			kind=function(value, previousValue)
 				local result = OR(value, previousValue)
-				print ("INVENTORY BYTE: INITIAL OR: " .. tostring(result))
 				if 0 ~= AND(result, BIT(0)) then result = UNSET(result, 1) print("BIRD") end -- If acquired bird, clear flute
-				-- if 0 ~= AND(result, BIT(4)) then result = UNSET(result, 5) print("POWDER") end -- Should do SOMETHING with mushroom so it can be "lost", but I'm not sure what
-				print ("INVENTORY BYTE: FINAL OR: " .. tostring(result))
+				-- FIXME: Do not re-set mushroom bit if mushroom is already given to witch
 				return (result ~= previousValue), (result) 
+			end,
+			receiveTrigger=function(value, previousValue) -- Mushroom/powder byte is a disaster so set it indirectly when this mask changes
+				-- If powder bit went high and no mushroom type item is being held, place powder in inventory
+				if 0 ~= AND(value, BIT(4)) and 0 == AND(previousValue, BIT(4)) and 0 == memory.readbyte(mushroomByte) then
+					memory.writebyte(mushroomByte, 2)
+				end
+				-- If mushroom bit went high and no mushroom type item is being held, place mushroom in inventory
+				if 0 ~= AND(value, BIT(5)) and 0 == AND(previousValue, BIT(5)) and 0 == memory.readbyte(mushroomByte) then
+					memory.writebyte(mushroomByte, 1)
+				end
 			end
 		},
 
@@ -61,9 +71,6 @@ return {
 		[0x7EF340] = {kind=zeroRising},                     -- Bows, tracked in INVENTORY_SWAP_2 but must be nonzero to appear in inventory
 		[0x7EF341] = {kind=zeroRising},                     -- Boomerangs, tracked in INVENTORY_SWAP
 		[0x7EF342] = {name="Hookshot", kind="high"},
-		-- FIXME: Using "high" here means that if you're holding the Mushroom and the other player gets the Powder, the Mushroom will be replaced in their hand.
-		-- Unfortunately, if we use "zeroRising", we get a worse bug: Collecting Powder after the other player gets *and gives away* Mushroom results in no item transfer.
-		[0x7EF344] = {kind="high"},                         -- Powder/mushroom, tracked in INVENTORY_SWAP
 		[0x7EF345] = {name="Fire Rod", kind="high"},
 		[0x7EF346] = {name="Ice Rod", kind="high"},
 		[0x7EF347] = {name="Bombos", kind="high"},
@@ -71,6 +78,7 @@ return {
 		[0x7EF349] = {name="Quake", kind="high"},
 		[0x7EF34A] = {name="Lantern", kind="high"},
 		[0x7EF34B] = {name="Hammer", kind="high"},
+		-- Note this doesn't need to happen in INVENTORY_SWAP receiveTrigger bc you can only upgrade the flute while holding it
 		[0x7EF34C] = {kind=zeroRisingOrUpgradeFlute},       -- Shovel flute etc, tracked in INVENTORY_SWAP
 		[0x7EF34D] = {name="Net", kind="high"},
 		[0x7EF34E] = {name="Book", kind="high"},

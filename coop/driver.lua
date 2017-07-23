@@ -1,18 +1,16 @@
 -- ACTUAL WORK HAPPENS HERE
 
-function recordChanged(record, value, previousValue)
+function recordChanged(record, value, previousValue, receiving)
 	local allow = true
 	print({"TESTING WITH", record=record})
 
 	if type(record.kind) == "function" then
-		allow, value = record.kind(value, previousValue)
+		allow, value = record.kind(value, previousValue, receiving)
 	elseif record.kind == "high" then
 		allow = value > previousValue
 	elseif record.kind == "bitOr" then
 		local maskedValue         = value                        -- Backup value and previousValue
 		local maskedPreviousValue = previousValue
-
-		print({"Inside recordChanged", value=value, previousValue=previousValue, maskedValue=maskedValue, maskedPreviousValue=maskedPreviousValue, record=record})
 
 		if record.mask then                                      -- If necessary, mask both before checking
 			maskedValue = AND(maskedValue, record.mask)
@@ -23,7 +21,6 @@ function recordChanged(record, value, previousValue)
 
 		allow = maskedValue ~= maskedPreviousValue               -- Did operated-on bits change?
 		value = OR(previousValue, maskedValue)                   -- Copy operated-on bits back into value
-		print({"Inside recordChanged2", value=value, previousValue=previousValue, maskedValue=maskedValue, maskedPreviousValue=maskedPreviousValue, allow=allow})
 	else
 		allow = value ~= previousValue
 	end
@@ -73,8 +70,25 @@ function GameDriver:childTick()
 end
 
 function GameDriver:childWake()
+	local entered = {}
 	for k,v in pairs(self.spec.sync) do
-		memory.registerwrite (k, 1, function(a,b) if a==k then self:memoryWrite(a,b,v) end end)
+		-- The memory watch registration is awkward, and it has to be this way because of a bug in some versions of snes9x-rr.
+		-- Sometimes when a 8-bit registerwrite watch address is odd (not 16-bit word aligned?) snes9x will get confused and trigger for the corresponding word-aligned address instead.
+		-- To work around this we register one 16-bit watch address and then call both real callbacks (if any). This does mean memoryWrite() must tolerate spurious extra calls.
+		if not entered[k] then
+			entered[k] = true
+			local addr = k - (k%2)
+			local syncTable = self.spec.sync -- Assume sync table is not replaced at runtime
+			local function callback(a,b) -- I have no idea what "b" is but snes9x passes it
+				for offset=1,2 do
+					local checkAddr = addr + offset
+					local record = syncTable[checkAddr]
+					if record then self:memoryWrite(checkAddr, b, record) end
+				end
+			end
+
+			memory.registerwrite (k, 2, callback)
+		end
 	end
 end
 
@@ -90,7 +104,7 @@ function GameDriver:memoryWrite(addr, arg2, record)
 		local value = memory.readbyte(addr)
 
 		if record.cache then
-			allow = recordChanged(record, value, record.cache)
+			allow = recordChanged(record, value, record.cache, false)
 		end
 
 		if allow then
@@ -112,9 +126,13 @@ function GameDriver:handleTable(t)
 			local allow = true
 			local previousValue = memory.readbyte(addr)
 
-			allow, value = recordChanged(record, value, previousValue)
+			allow, value = recordChanged(record, value, previousValue, true)
 
 			if allow then
+				if record.receiveTrigger then -- Extra setup/cleanup on receive
+					record.receiveTrigger(value, previousValue)
+				end
+
 				local name = record.name
 				local names = nil
 

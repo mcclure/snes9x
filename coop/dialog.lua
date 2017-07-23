@@ -19,8 +19,6 @@ function selectDialog(specs, reason)
 		names = names .. v.name .. "|"
 	end
 
-	print(names)
-
 	local res, selection = iup.GetParam("Select game", nil,
 	    "Can't figure out\rwhich game to load\r(" .. reason .. ")\r" ..
 	    "Which game is this? " ..
