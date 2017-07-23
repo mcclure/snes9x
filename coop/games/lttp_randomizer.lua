@@ -34,7 +34,7 @@ return {
 			nameBitmap={"Bird", "Flute", "Shovel", "unknown item", "Magic Powder", "Mushroom", "Magic Boomerang", "Boomerang"},
 			kind=function(value, previousValue)
 				local result = OR(value, previousValue)
-				if 0 ~= AND(result, BIT(0)) then result = UNSET(result, 1) print("BIRD") end -- If acquired bird, clear flute
+				if 0 ~= AND(result, BIT(0)) then result = UNSET(result, 1) end -- If acquired bird, clear flute
 				-- FIXME: Do not re-set mushroom bit if mushroom is already given to witch
 				return (result ~= previousValue), (result) 
 			end,

@@ -100,7 +100,9 @@ function IrcPipe:childWake()
 end
 
 function IrcPipe:childTick()
-	self.driver:tick()
+	if self.state == IrcState.piping then
+		self.driver:tick()
+	end
 end
 
 function IrcPipe:handle(s)

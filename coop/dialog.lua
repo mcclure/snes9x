@@ -1,16 +1,18 @@
 require "iuplua"
 
 function ircDialog()
-	local res, server, port, nick, partner = iup.GetParam("Connection settings", nil,
+	local res, server, port, nick, partner, forceSend = iup.GetParam("Connection settings", nil,
 	    "Enter an IRC server: %s\n" ..
 		"IRC server port: %i\n" ..
 		"Your nick: %s\n" ..
-		"Partner nick: %s\n"
-	    ,"irc.speedrunslive.com", 6667, "", "")
+		"Partner nick: %s\n" ..
+		"%t\n" .. -- <hr>
+		"Are you restarting\rafter a crash? %o|No|Yes|\n"
+	    ,"irc.speedrunslive.com", 6667, "", "", 0)
 
 	if 0 == res then return nil end
 
-	return {server=server, port=port, nick=nick, partner=partner}
+	return {server=server, port=port, nick=nick, partner=partner, forceSend=forceSend==1}
 end
 
 function selectDialog(specs, reason)

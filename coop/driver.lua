@@ -2,7 +2,6 @@
 
 function recordChanged(record, value, previousValue, receiving)
 	local allow = true
-	print({"TESTING WITH", record=record})
 
 	if type(record.kind) == "function" then
 		allow, value = record.kind(value, previousValue, receiving)
@@ -54,17 +53,48 @@ function performTest(record, valueOverride)
 end
 
 class.GameDriver(Driver)
-function GameDriver:_init(spec)
+function GameDriver:_init(spec, forceSend)
 	self.spec = spec
 	self.sleepQueue = {}
+	self.forceSend = forceSend
+	self.didCache = false
+end
+
+function GameDriver:checkFirstRunning() -- Do first-frame bootup-- only call if isRunning()
+	if not self.didCache then
+		if driverDebug then print("First moment running") end
+
+		for k,v in pairs(self.spec.sync) do -- Enter all current values into cache so we don't send pointless 0 values later
+			local value = memory.readbyte(k)
+			if not v.cache then v.cache = value end
+
+			if self.forceSend then -- Restoring after a crash send all values regardless of importance
+				if value ~= 0 then -- FIXME: This is adequate for all current specs but maybe it will not be in future?!
+					if driverDebug then print("Sending address " .. tostring(v) .. " at startup") end
+
+					self:sendTable({addr=k, value=value})
+				end
+			end
+		end
+
+		if self.spec.startup then
+			self.spec.startup(self.forceSend)
+		end
+
+		self.didCache = true
+	end
 end
 
 function GameDriver:childTick()
-	if #self.sleepQueue > 0 and self:isRunning() then
-		local sleepQueue = self.sleepQueue
-		self.sleepQueue = {}
-		for i, v in ipairs(sleepQueue) do
-			self:handleTable(v)
+	if self:isRunning() then
+		self:checkFirstRunning()
+
+		if #self.sleepQueue > 0 then
+			local sleepQueue = self.sleepQueue
+			self.sleepQueue = {}
+			for i, v in ipairs(sleepQueue) do
+				self:handleTable(v)
+			end
 		end
 	end
 end
@@ -100,6 +130,8 @@ function GameDriver:memoryWrite(addr, arg2, record)
 	local running = self.spec.running
 
 	if self:isRunning() then -- TODO: Yes, we got record, but double check
+		self:checkFirstRunning()
+
 		local allow = true
 		local value = memory.readbyte(addr)
 
@@ -121,6 +153,8 @@ function GameDriver:handleTable(t)
 	local addr = t.addr
 	local record = self.spec.sync[addr]
 	if self:isRunning() then
+		self:checkFirstRunning()
+
 		if record then
 			local value = t.value
 			local allow = true
