@@ -9,7 +9,8 @@
 -- This file is available under Creative Commons CC0 
 
 return {
-	guid = "3c78768e-fe8c-45e1-87ad-bc521bc34a75",
+	guid = "174e4546-69a8-4b14-9128-1bf4d3f22ac5",
+	format = "1.0",
 	name = "Link to the Past JPv1.0",
 	match = {"stringtest", addr=0xFFC0, value="ZELDANODENSETSU"},
 

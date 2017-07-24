@@ -23,7 +23,8 @@ end
 local mushroomByte = 0x7EF344
 
 return {
-	guid = "f080c17d-3410-4294-b412-21f8babeee6b",
+	guid = "5aa171c4-0e3f-4919-8578-870cea6dbe91",
+	format = "1.0",
 	name = "Link to the Past Randomizer",
 	match = {"stringtest", addr=0xFFC0, value="VT"},
 

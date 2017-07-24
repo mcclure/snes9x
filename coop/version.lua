@@ -18,11 +18,6 @@ version = {
 	-- Increment this number if you change the handshake or the way tables are encoded into text in pipe.lua
 	ircPipe = "1.0 beta",
 
-	-- How should the table contents be read (IE the contents of driver.lua)
-	-- Increment this number if you add new mandatory-to-understand table keys
-	-- I honestly can't think of a reason this would ever change, but WHO KNOWS
-	tableSpeak = "1.0 beta",
-
 	-- Format/capabilities used for modes in the modes/ directory
 	-- Increment this number if you change driver.lua in a way that means things are possible in a modes/ file that weren't before
 	modeFormat = "1.0 beta"

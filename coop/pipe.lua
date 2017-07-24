@@ -49,12 +49,12 @@ function Pipe:send(s)
 end
 
 function Pipe:receivePump()
-	while true do -- Loop until no data left
+	while not self.dead do -- Loop until no data left
 		local result, err = self.server:receive(1) -- Pull one byte
 		if not result then
 			if err ~= "timeout" then
 				errorMessage("Connection died: " .. err)
-				self.exit()
+				self:exit()
 			end
 			return
 		end
@@ -82,9 +82,9 @@ function Pipe:handle() end
 
 -- TODO: nickserv, reconnect logic, multiline messages
 
-local IrcState = {login = 1, searching = 2, handshake = 3, piping = 4}
+local IrcState = {login = 1, searching = 2, handshake = 3, piping = 4, aborted=5}
 local IrcHello = "!! Hi, I'm a matchmaking bot for SNES games. This user thinks you're running the same bot and typed in your nick. If you're a human and seeing this, they made a mistake!"
-local IrcConfirm = "@@"
+local IrcConfirm = "@@ " .. version.ircPipe
 
 class.IrcPipe(Pipe)
 function IrcPipe:_init(data, driver)
@@ -92,6 +92,7 @@ function IrcPipe:_init(data, driver)
 	self.data = data
 	self.driver = driver
 	self.state = IrcState.login
+	self.sentVersion = false
 end
 
 function IrcPipe:childWake()
@@ -103,6 +104,12 @@ function IrcPipe:childTick()
 	if self.state == IrcState.piping then
 		self.driver:tick()
 	end
+end
+
+function IrcPipe:abort(msg)
+	self.state = IrcState.aborted -- FIXME: I guess this is maybe redundant with .dead?
+	self:exit()
+	errorMessage(msg)
 end
 
 function IrcPipe:handle(s)
@@ -142,19 +149,31 @@ function IrcPipe:handle(s)
 						local exclaim = prefix == "!!"
 						local confirm = prefix == "@@" 
 						if exclaim or confirm then
-							if debug then print("Handshake finished") end
-							statusMessage(nil)
-							message("Connected to partner")
-
-							if exclaim then
+							if not self.sentVersion then
+								if debug then print("Handshake started") end
 								self:msg(IrcConfirm)
+								self.sentVersion = true
 							end
-							self.state = IrcState.piping
-							self.driver:wake(self)
+
+							if confirm then
+								local splits3 = stringx.split(msg, nil, 2)
+								local theirIrcVersion = splits3[2]
+								if not versionMatches(version.ircPipe, theirIrcVersion) then
+									self:abort("Your partner's emulator version is incompatible")
+									print("Other user is using IRC pipe version " .. tostring(theirIrcVersion) .. ", you have " .. tostring(version.ircPipe))
+								else
+									if debug then print("Handshake finished") end
+									statusMessage(nil)
+									message("Connected to partner")
+
+									self.state = IrcState.piping
+									self.driver:wake(self)
+								end
+							end
 						elseif msg:sub(1,1) == "#" then
-							errorMessage("Tried to connect, but your partner is already playing the game! Try resetting?")
+							self:abort("Tried to connect, but your partner is already playing the game! Try resetting?")
 						else
-							errorMessage("Your partner's emulator responded in... English? You probably typed the wrong nick!")
+							self:abort("Your partner's emulator responded in... English? You probably typed the wrong nick!")
 						end
 					end
 				end

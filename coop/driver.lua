@@ -100,6 +100,8 @@ function GameDriver:childTick()
 end
 
 function GameDriver:childWake()
+	self:sendTable({"hello", version=version.release, guid=self.spec.guid})
+
 	local entered = {}
 	for k,v in pairs(self.spec.sync) do
 		-- The memory watch registration is awkward, and it has to be this way because of a bug in some versions of snes9x-rr.
@@ -150,6 +152,14 @@ function GameDriver:memoryWrite(addr, arg2, record)
 end
 
 function GameDriver:handleTable(t)
+	if t[1] == "hello" then
+		if t.guid ~= self.spec.guid then
+			self.pipe:abort("Partner has a different game mode file installed")
+			print("Partner's game mode file has guid:\n" .. tostring(t.guid) .. "\nbut yours has:\n" .. tostring(self.spec.guid))
+		end
+		return
+	end
+
 	local addr = t.addr
 	local record = self.spec.sync[addr]
 	if self:isRunning() then
