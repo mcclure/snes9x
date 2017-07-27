@@ -2,6 +2,8 @@
 
 This is an emulator hack that turns 1-player games into 2-player games by sharing in-game inventory over the internet. The sharing software is in the coop/ directory. A copy of snes9x-rr is included.
 
+![(A screenshot)](lantern.png)
+
 This currently works with Legend of Zelda: A Link to the Past; the [Link to the Past Randomizer](http://vt.alttp.run/randomizer); and Super Metroid.
 
 # Usage
@@ -12,7 +14,7 @@ When you're ready, open the ROM you wish to play. Then select `File->Lua Scripti
 
 Emu-coop communicates using Internet Relay Chat. You will get a popup asking which IRC server you want to connect to, what nickname you want to use, and what the nickname of your Player 2 will be. Once you're connected, tell your Player 2 to connect to the same network and enter your nick in their emulator. You should see either "Connected to partner", or an error message, pop up on your game screen.
 
-If you halt a game in the middle and have to restart-- say, maybe your emulator crashed, or your Internet disconnected, or you died in Super Metroid-- you might "desync", where there are items that one player has but not the other. If this happens, both players should save, close their emulators, connect again, and this time check "Yes" for "Are you reconnecting after a crash?". This will resend all the data that emu-coop is tracking.
+If you halt a game in the middle and have to restart-- maybe your emulator crashed, or your Internet disconnected, or you died in Super Metroid-- you might "desync", where there are items that one player has but not the other. If this happens, both players should save, close their emulators, connect again, and this time check "Yes" for "Are you reconnecting after a crash?". This will resend all the data that emu-coop is tracking.
 
 At the moment, you can run the script once per snes9x boot. On the second attempt to run the coop script it crashes. I don't know why.
 

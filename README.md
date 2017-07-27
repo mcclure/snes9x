@@ -27,10 +27,11 @@ To make an install package:
 - Copy win32/snes9x.exe into install dir
 - Copy lua/lib/lua51.dll into install dir
 - Copy coop/ directory into install dir.
+- Copy docs/ directory into install dir.
 
 ## How to build for Mac or Linux?
 
-You're going to need to somehow build shared objects for the C portion of Luasocket.
+You're going to need to somehow build shared objects for the C portions of LuaSocket and IUPLua.
 
 ## How to use
 
