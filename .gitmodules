@@ -1,0 +1,3 @@
+[submodule "coop"]
+	path = coop
+	url = git@github.com:mcclure/emu-coop.git
