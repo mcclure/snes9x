@@ -26,8 +26,9 @@ To make an install package:
 - Build as release
 - Copy win32/snes9x.exe into install dir
 - Copy lua/lib/lua51.dll into install dir
-- Copy coop/ directory into install dir.
-- Copy docs/ directory into install dir.
+- Copy coop/ directory into install dir
+- Copy docs/ directory into install dir
+- Copy README-USAGE.md into install dir as README.md
 
 ## How to build for Mac or Linux?
 

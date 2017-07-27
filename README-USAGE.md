@@ -2,8 +2,6 @@
 
 This is an emulator hack that turns 1-player games into 2-player games by sharing in-game inventory over the internet. The sharing software is in the coop/ directory. A copy of snes9x-rr is included.
 
-![(A screenshot)](lantern.png)
-
 This currently works with Legend of Zelda: A Link to the Past; the [Link to the Past Randomizer](http://vt.alttp.run/randomizer); and Super Metroid.
 
 # Usage
