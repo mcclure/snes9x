@@ -196,8 +196,6 @@
 #include "memmap.h"
 #include "screenshot.h"
 
-#include <QuickTime/QuickTime.h>
-
 #include "mac-prefix.h"
 #include "mac-file.h"
 #include "mac-gworld.h"
@@ -279,44 +277,6 @@ void WriteThumbnailToResourceFork (FSRef *ref, int destWidth, int destHeight)
 
 static void ExportCGImageToPNGFile (CGImageRef image, const char *path)
 {
-	OSStatus				err;
-	GraphicsExportComponent	exporter;
-	CFStringRef				str;
-	CFURLRef				url;
-	Handle					dataRef;
-	OSType					dataRefType;
-
-	str = CFStringCreateWithCString(kCFAllocatorDefault, path, kCFStringEncodingUTF8);
-	if (str)
-	{
-		url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
-		if (url)
-		{
-			err = QTNewDataReferenceFromCFURL(url, 0, &dataRef, &dataRefType);
-			if (err == noErr)
-			{
-				err = OpenADefaultComponent(GraphicsExporterComponentType, kQTFileTypePNG, &exporter);
-				if (err == noErr)
-				{
-					err = GraphicsExportSetInputCGImage(exporter, image);
-					if (err == noErr)
-					{
-						err = GraphicsExportSetOutputDataReference(exporter, dataRef, dataRefType);
-						if (err == noErr)
-							err = GraphicsExportDoExport(exporter, NULL);
-					}
-
-					CloseComponent(exporter);
-				}
-
-				DisposeHandle(dataRef);
-			}
-
-			CFRelease(url);
-		}
-
-		CFRelease(str);
-	}
 }
 
 CGImageRef CreateGameScreenCGImage (void)
@@ -368,86 +328,6 @@ CGImageRef CreateBlitScreenCGImage (int width, int height, int rowbytes, uint8 *
 
 void DrawThumbnailResource (FSRef *ref, CGContextRef ctx, CGRect bounds)
 {
-	OSStatus			err;
-	CGDataProviderRef	prov;
-	CGColorSpaceRef		color;
-	CGImageRef			image;
-	QDPictRef			qdpr;
-	Handle				pict;
-	HFSUniStr255		fork;
-	SInt16				resf;
-	Size				size;
-
-	CGContextSaveGState(ctx);
-
-	CGContextSetRGBFillColor(ctx, 0.0f, 0.0f, 0.0f, 1.0f);
-	CGContextFillRect(ctx, bounds);
-
-	err = FSGetResourceForkName(&fork);
-	if (err == noErr)
-	{
-		err = FSOpenResourceFile(ref, fork.length, fork.unicode, fsRdPerm, &resf);
-		if (err == noErr)
-		{
-			pict = Get1Resource('PICT', 128);
-			if (pict)
-			{
-				HLock(pict);
-
-				size = GetHandleSize(pict);
-				prov = CGDataProviderCreateWithData(NULL, (void *) *pict, size, NULL);
-				if (prov)
-				{
-					qdpr = QDPictCreateWithProvider(prov);
-					if (qdpr)
-					{
-						QDPictDrawToCGContext(ctx, bounds, qdpr);
-						QDPictRelease(qdpr);
-					}
-
-					CGDataProviderRelease(prov);
-				}
-
-				HUnlock(pict);
-				ReleaseResource(pict);
-			}
-			else
-			{
-				pict = Get1Resource('Thum', 128);
-				if (pict)
-				{
-					HLock(pict);
-
-					size = GetHandleSize(pict);
-					prov = CGDataProviderCreateWithData(NULL, (void *) *pict, size, NULL);
-					if (prov)
-					{
-						color = CGColorSpaceCreateDeviceRGB();
-						if (color)
-						{
-							image = CGImageCreate(128, 120, 5, 16, 256, color, kCGImageAlphaNoneSkipFirst | ((systemVersion >= 0x1040) ? kCGBitmapByteOrder16Big : 0), prov, NULL, 0, kCGRenderingIntentDefault);
-							if (image)
-							{
-								CGContextDrawImage(ctx, bounds, image);
-								CGImageRelease(image);
-							}
-
-							CGColorSpaceRelease(color);
-						}
-
-						CGDataProviderRelease(prov);
-					}
-
-					HUnlock(pict);
-					ReleaseResource(pict);
-				}
-			}
-
-			CloseResFile(resf);
-		}
-	}
-
-	CGContextRestoreGState(ctx);
 }
 
 bool8 S9xDoScreenshot (int width, int height)

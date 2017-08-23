@@ -737,7 +737,7 @@ static void FilterUIAddSubviews (WindowRef window, HIViewRef parent)
 			{
 				CFStringAppend(label, CFSTR(" :"));
 				err = CreateStaticTextControl(window, &rct, label, NULL, &ctl);
-				SetStaticTextTrunc(ctl, truncEnd, true);
+				SetStaticTextTrunc(ctl, 0, true); // 0 is "truncEnd". Apple has removed this enum in newer operating systems.
 				err = HIViewAddSubview(parent, ctl);
 				frame.origin.x = 5.0f;
 				frame.origin.y = (float) (m * 28);

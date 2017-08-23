@@ -1281,9 +1281,6 @@ static void CheatFinderHandleAddEntryButton (WindowData *cf)
 	if (cfAddress[cfListSelection] > (0x20000 - cfViewNumBytes))
 		PlayAlertSound();
 	else
-	if (Cheat.num_cheats + cfViewNumBytes > MAX_CHEATS)
-		AppearanceAlert(kAlertCautionAlert, kS9xMacAlertCFCantAddEntry, kS9xMacAlertCFCantAddEntryHint);
-	else
 		CheatFinderBeginAddEntrySheet(cf);
 }
 
@@ -1444,6 +1441,7 @@ static pascal OSStatus CheatFinderSheetEventHandler (EventHandlerCallRef inHandl
 
 static void CheatFinderAddEntry (SInt64 value, char *description)
 {
+#if 0
 	UInt32	addr, v;
 
 	addr = cfAddress[cfListSelection];
@@ -1456,6 +1454,7 @@ static void CheatFinderAddEntry (SInt64 value, char *description)
 	}
 
 	S9xApplyCheats();
+#endif
 }
 
 static pascal OSStatus CheatFinderListFrameEventHandler (EventHandlerCallRef inHandlerCallRef, EventRef inEvent, void *userData)

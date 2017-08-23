@@ -227,7 +227,7 @@ typedef struct
 
 static WindowRef	wRef;
 static HIViewRef	dbRef;
-static CheatItem	citem[MAX_CHEATS];
+static std::vector<SCheatItem>	citem;
 static uint32		numofcheats;
 
 static void InitCheatItems (void);
@@ -241,11 +241,12 @@ static pascal Boolean DBCompareCallBack (HIViewRef, DataBrowserItemID, DataBrows
 static pascal OSStatus DBClientDataCallback (HIViewRef, DataBrowserItemID, DataBrowserPropertyID, DataBrowserItemDataRef, Boolean);
 static pascal OSStatus CheatEventHandler (EventHandlerCallRef, EventRef, void *);
 
-
 static void InitCheatItems (void)
 {
-	for (unsigned int i = 0; i < MAX_CHEATS; i++)
+#if 0
+	for (unsigned int i = 0; i < CheatCount(); i++)
 	{
+        citem.resize(i+1);
 		citem[i].id      = i + 1;
 		citem[i].valid   = false;
 		citem[i].enabled = false;
@@ -253,10 +254,12 @@ static void InitCheatItems (void)
 		citem[i].value   = 0;
 		sprintf(citem[i].description, "Cheat %03" PRIu32, citem[i].id);
 	}
+#endif
 }
 
 static void ImportCheatItems (void)
 {
+#if 0
 	for (unsigned int i = 0; i < Cheat.num_cheats; i++)
 	{
 		citem[i].valid   = true;
@@ -265,10 +268,12 @@ static void ImportCheatItems (void)
 		citem[i].value   = Cheat.c[i].byte;
 		strcpy(citem[i].description, Cheat.c[i].name);
 	}
+#endif
 }
 
 static void DetachCheatItems (void)
 {
+#if 0
 	S9xDeleteCheats(); // Cheat.num_cheats = 0
 
 	for (unsigned int i = 0; i < MAX_CHEATS; i++)
@@ -281,10 +286,12 @@ static void DetachCheatItems (void)
 	}
 
 	S9xApplyCheats();
+#endif
 }
 
 void ConfigureCheat (void)
 {
+#if 0
 	if (!cartOpen)
 		return;
 
@@ -402,10 +409,12 @@ void ConfigureCheat (void)
 
 		DisposeNibReference(nibRef);
 	}
+#endif
 }
 
 static void AddCheatItem (void)
 {
+#if 0
 	OSStatus			err;
 	HIViewRef			ctl, root;
 	HIViewID			cid;
@@ -449,10 +458,12 @@ static void AddCheatItem (void)
 		HIViewFindByID(root, cid, &ctl);
 		err = ActivateControl(ctl);
 	}
+#endif
 }
 
 static void DeleteCheatItem (void)
 {
+#if 0
 	OSStatus	err;
 	HIViewRef	ctl, root;
 	HIViewID	cid;
@@ -499,10 +510,12 @@ static void DeleteCheatItem (void)
 		HIViewFindByID(root, cid, &ctl);
 		err = DeactivateControl(ctl);
 	}
+#endif
 }
 
 static void EnableAllCheatItems (void)
 {
+#if 0
 	OSStatus	err;
 
 	for (unsigned int i = 0; i < MAX_CHEATS; i++)
@@ -510,10 +523,12 @@ static void EnableAllCheatItems (void)
 			citem[i].enabled = true;
 
 	err = UpdateDataBrowserItems(dbRef, kDataBrowserNoItem, kDataBrowserNoItem, NULL, kDataBrowserItemNoProperty, kCmCheckBox);
+#endif
 }
 
 static pascal OSStatus DBClientDataCallback (HIViewRef browser, DataBrowserItemID itemID, DataBrowserPropertyID property, DataBrowserItemDataRef itemData, Boolean changeValue)
 {
+#if 0
 	OSStatus 	err, result;
 	CFStringRef	str;
 	Boolean		r;
@@ -655,10 +670,12 @@ static pascal OSStatus DBClientDataCallback (HIViewRef browser, DataBrowserItemI
 	}
 
 	return (result);
+#endif
 }
 
 static pascal Boolean DBCompareCallBack (HIViewRef browser, DataBrowserItemID itemOne, DataBrowserItemID itemTwo, DataBrowserPropertyID sortProperty)
 {
+#if 0
 	Boolean	result = false;
 
 	switch (sortProperty)
@@ -680,10 +697,12 @@ static pascal Boolean DBCompareCallBack (HIViewRef browser, DataBrowserItemID it
 	}
 
 	return (result);
+#endif
 }
 
 static pascal void DBItemNotificationCallBack (HIViewRef browser, DataBrowserItemID itemID, DataBrowserItemNotification message)
 {
+#if 0
 	OSStatus	err;
 	HIViewRef	ctl;
 	HIViewID	cid = { kDelButton, 0 };
@@ -700,10 +719,12 @@ static pascal void DBItemNotificationCallBack (HIViewRef browser, DataBrowserIte
 			else
 				err = ActivateControl(ctl);
 	}
+#endif
 }
 
 static pascal OSStatus CheatEventHandler (EventHandlerCallRef inHandlerCallRef, EventRef inEvent, void *inUserData)
 {
+#if 0
 	OSStatus	err, result = eventNotHandledErr;
 	WindowRef	tWindowRef;
 
@@ -762,4 +783,5 @@ static pascal OSStatus CheatEventHandler (EventHandlerCallRef inHandlerCallRef, 
 	}
 
 	return (result);
+#endif
 }
