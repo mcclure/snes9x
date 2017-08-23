@@ -287,135 +287,149 @@ bool8 NavOpenROMImage (FSRef *ref)
 	NavEventUPP					eventUPP;
 	NavObjectFilterUPP			filterUPP;
 	NavState					nav;
+    
+    // TODO: All the options below.
+    NSOpenPanel * openPanel = [NSOpenPanel openPanel];
+    [openPanel runModal];
+    
+    if ([openPanel.URL isKindOfClass:[NSURL class]]) {
+        CFURLRef url = (CFURLRef)openPanel.URL; // TODO: Fix deprecation
+        CFURLGetFSRef(url, ref);
+        return true;
+    }
+    
+    return false;
 
-#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
-	if (systemVersion < 0x1060)
-	{
-		HIViewID	cid = { 'PANE', 1000 };
-		Rect		rct;
-
-		err = CreateNibReference(kMacS9XCFString, &(nav.customNib));
-		if (err)
-			return (false);
-
-		err = CreateWindowFromNib(nav.customNib, CFSTR("OpenROM"), &(nav.customWindow));
-		if (err)
-		{
-			DisposeNibReference(nav.customNib);
-			return (false);
-		}
-
-		GetWindowBounds(nav.customWindow, kWindowContentRgn, &rct);
-		nav.customWidth  = rct.right  - rct.left;
-		nav.customHeight = rct.bottom - rct.top;
-
-		HIViewFindByID(HIViewGetRoot(nav.customWindow), cid, &(nav.customPane));
-	}
-#endif
-
-	err = NavGetDefaultDialogCreationOptions(&dialogOptions);
-	dialogOptions.optionFlags &= ~kNavAllowMultipleFiles;
-	dialogOptions.preferenceKey = 3;
-	dialogOptions.clientName = kMacS9XCFString;
-	dialogOptions.windowTitle = CFCopyLocalizedString(CFSTR("OpenROMMes"), "Open");
-	dialogOptions.modality = kWindowModalityAppModal;
-	dialogOptions.parentWindow = NULL;
-	nav.parent = NULL;
-
-#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
-	eventUPP = NewNavEventUPP((systemVersion < 0x1060) ? NavOpenCartEventHandler : NavGenericOpenEventHandler);
-#else
-	eventUPP = NewNavEventUPP(NavGenericOpenEventHandler);
-#endif
-	filterUPP = NewNavObjectFilterUPP(NavOpenCartFilter);
-
-	err = NavCreateChooseFileDialog(&dialogOptions, NULL, eventUPP, NULL, filterUPP, &nav, &(nav.nref));
-	if (err == noErr)
-	{
-		if (systemVersion >= 0x1060)
-		{
-			NSAutoreleasePool	*pool;
-			NSView				*view;
-			NSTextField			*txtM, *txtI, *txtV, *txtH;
-			NSPopUpButton		*popM, *popI, *popV, *popH;
-			NSArray				*aryM, *aryI, *aryV, *aryH;
-
-			pool = [[NSAutoreleasePool alloc] init];
-
-			view = [[[NSView alloc] initWithFrame: NSMakeRect(0, 0, 433, 52)] autorelease];
-
-			aryM = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROM6", @""), NSLocalizedString(@"OpenROM7", @""), nil];
-			aryI = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROMa", @""), NSLocalizedString(@"OpenROMb", @""), NSLocalizedString(@"OpenROMc", @""), NSLocalizedString(@"OpenROMd", @""), nil];
-			aryV = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROM8", @""), NSLocalizedString(@"OpenROM9", @""), nil];
-			aryH = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROMe", @""), NSLocalizedString(@"OpenROMf", @""), nil];
-
-			CocoaAddStatTextToView(view, @"OpenROM1",   5, 32,  84, 14, &txtM);
-			CocoaAddStatTextToView(view, @"OpenROM3", 214, 32,  96, 14, &txtI);
-			CocoaAddStatTextToView(view, @"OpenROM2",   5,  7,  84, 14, &txtV);
-			CocoaAddStatTextToView(view, @"OpenROM4", 214,  7,  96, 14, &txtH);
-			CocoaAddPopUpBtnToView(view, aryM,         91, 27, 116, 22, &popM);
-			CocoaAddPopUpBtnToView(view, aryI,        312, 27, 116, 22, &popI);
-			CocoaAddPopUpBtnToView(view, aryV,         91,  2, 116, 22, &popV);
-			CocoaAddPopUpBtnToView(view, aryH,        312,  2, 116, 22, &popH);
-
-			[txtM setAlignment: NSRightTextAlignment];
-			[txtI setAlignment: NSRightTextAlignment];
-			[txtV setAlignment: NSRightTextAlignment];
-			[txtH setAlignment: NSRightTextAlignment];
-
-			[popM selectItemAtIndex: romDetect       ];
-			[popI selectItemAtIndex: interleaveDetect];
-			[popV selectItemAtIndex: videoDetect     ];
-			[popH selectItemAtIndex: headerDetect    ];
-
-			[(NSOpenPanel *) nav.nref setAccessoryView: view];
-
-			err = NavDialogRun(nav.nref);
-			if (err)
-				NavDialogDispose(nav.nref);
-
-			romDetect        = [popM indexOfSelectedItem];
-			interleaveDetect = [popI indexOfSelectedItem];
-			videoDetect      = [popV indexOfSelectedItem];
-			headerDetect     = [popH indexOfSelectedItem];
-
-			[pool release];
-		}
-	#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
-		else
-		{
-			err = NavDialogRun(nav.nref);
-			if (err)
-				NavDialogDispose(nav.nref);
-		}
-	#endif
-	}
-
-	DisposeNavObjectFilterUPP(filterUPP);
-	DisposeNavEventUPP(eventUPP);
-
-	CFRelease(dialogOptions.windowTitle);
-
-#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
-	if (systemVersion < 0x1060)
-	{
-		CFRelease(nav.customWindow);
-		DisposeNibReference(nav.customNib);
-	}
-#endif
-
-	if (err)
-		return (false);
-	else
-	{
-		if (nav.reply)
-		{
-			*ref = nav.ref;
-			return (true);
-		}
-		else
-			return (false);
-	}
+//#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
+//	if (systemVersion < 0x1060)
+//	{
+//		HIViewID	cid = { 'PANE', 1000 };
+//		Rect		rct;
+//
+//		err = CreateNibReference(kMacS9XCFString, &(nav.customNib));
+//		if (err)
+//			return (false);
+//
+//		err = CreateWindowFromNib(nav.customNib, CFSTR("OpenROM"), &(nav.customWindow));
+//		if (err)
+//		{
+//			DisposeNibReference(nav.customNib);
+//			return (false);
+//		}
+//
+//		GetWindowBounds(nav.customWindow, kWindowContentRgn, &rct);
+//		nav.customWidth  = rct.right  - rct.left;
+//		nav.customHeight = rct.bottom - rct.top;
+//
+//		HIViewFindByID(HIViewGetRoot(nav.customWindow), cid, &(nav.customPane));
+//	}
+//#endif
+//
+//	err = NavGetDefaultDialogCreationOptions(&dialogOptions);
+//	dialogOptions.optionFlags &= ~kNavAllowMultipleFiles;
+//	dialogOptions.preferenceKey = 3;
+//	dialogOptions.clientName = kMacS9XCFString;
+//	dialogOptions.windowTitle = CFCopyLocalizedString(CFSTR("OpenROMMes"), "Open");
+//	dialogOptions.modality = kWindowModalityAppModal;
+//	dialogOptions.parentWindow = NULL;
+//	nav.parent = NULL;
+//
+//#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
+//	eventUPP = NewNavEventUPP((systemVersion < 0x1060) ? NavOpenCartEventHandler : NavGenericOpenEventHandler);
+//#else
+//	eventUPP = NewNavEventUPP(NavGenericOpenEventHandler);
+//#endif
+//	filterUPP = NewNavObjectFilterUPP(NavOpenCartFilter);
+//
+//	err = NavCreateChooseFileDialog(&dialogOptions, NULL, eventUPP, NULL, filterUPP, &nav, &(nav.nref));
+//	if (err == noErr)
+//	{
+//		if (systemVersion >= 0x1060)
+//		{
+//			NSAutoreleasePool	*pool;
+//			NSView				*view;
+//			NSTextField			*txtM, *txtI, *txtV, *txtH;
+//			NSPopUpButton		*popM, *popI, *popV, *popH;
+//			NSArray				*aryM, *aryI, *aryV, *aryH;
+//
+//			pool = [[NSAutoreleasePool alloc] init];
+//
+//			view = [[[NSView alloc] initWithFrame: NSMakeRect(0, 0, 433, 52)] autorelease];
+//
+//			aryM = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROM6", @""), NSLocalizedString(@"OpenROM7", @""), nil];
+//			aryI = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROMa", @""), NSLocalizedString(@"OpenROMb", @""), NSLocalizedString(@"OpenROMc", @""), NSLocalizedString(@"OpenROMd", @""), nil];
+//			aryV = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROM8", @""), NSLocalizedString(@"OpenROM9", @""), nil];
+//			aryH = [NSArray arrayWithObjects: NSLocalizedString(@"OpenROM5", @""), @"---", NSLocalizedString(@"OpenROMe", @""), NSLocalizedString(@"OpenROMf", @""), nil];
+//
+//			CocoaAddStatTextToView(view, @"OpenROM1",   5, 32,  84, 14, &txtM);
+//			CocoaAddStatTextToView(view, @"OpenROM3", 214, 32,  96, 14, &txtI);
+//			CocoaAddStatTextToView(view, @"OpenROM2",   5,  7,  84, 14, &txtV);
+//			CocoaAddStatTextToView(view, @"OpenROM4", 214,  7,  96, 14, &txtH);
+//			CocoaAddPopUpBtnToView(view, aryM,         91, 27, 116, 22, &popM);
+//			CocoaAddPopUpBtnToView(view, aryI,        312, 27, 116, 22, &popI);
+//			CocoaAddPopUpBtnToView(view, aryV,         91,  2, 116, 22, &popV);
+//			CocoaAddPopUpBtnToView(view, aryH,        312,  2, 116, 22, &popH);
+//
+//			[txtM setAlignment: NSRightTextAlignment];
+//			[txtI setAlignment: NSRightTextAlignment];
+//			[txtV setAlignment: NSRightTextAlignment];
+//			[txtH setAlignment: NSRightTextAlignment];
+//
+//			[popM selectItemAtIndex: romDetect       ];
+//			[popI selectItemAtIndex: interleaveDetect];
+//			[popV selectItemAtIndex: videoDetect     ];
+//			[popH selectItemAtIndex: headerDetect    ];
+//
+////			[(NSOpenPanel *) nav.nref setAccessoryView: view];
+////            
+////            [(NSOpenPanel *) nav.nref runModal];
+//
+////			err = NavDialogRun(nav.nref);
+////			if (err)
+////				NavDialogDispose(nav.nref);
+//
+//			romDetect        = [popM indexOfSelectedItem];
+//			interleaveDetect = [popI indexOfSelectedItem];
+//			videoDetect      = [popV indexOfSelectedItem];
+//			headerDetect     = [popH indexOfSelectedItem];
+//
+//			[pool release];
+//		}
+//	#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
+//		else
+//		{
+//			err = NavDialogRun(nav.nref);
+//			if (err)
+//				NavDialogDispose(nav.nref);
+//		}
+//	#endif
+//	}
+//
+//	DisposeNavObjectFilterUPP(filterUPP);
+//	DisposeNavEventUPP(eventUPP);
+//
+//	CFRelease(dialogOptions.windowTitle);
+//
+//#ifdef MAC_LEOPARD_TIGER_PANTHER_SUPPORT
+//	if (systemVersion < 0x1060)
+//	{
+//		CFRelease(nav.customWindow);
+//		DisposeNibReference(nav.customNib);
+//	}
+//#endif
+//
+//	if (err)
+//		return (false);
+//	else
+//	{
+//		if (nav.reply)
+//		{
+//			*ref = nav.ref;
+//			return (true);
+//		}
+//		else
+//			return (false);
+//	}
 }
 
 bool8 NavBeginOpenROMImageSheet (WindowRef parent, CFStringRef mes)
