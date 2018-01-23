@@ -304,6 +304,12 @@ enum OutputMethod {
 	OPENGL
 };
 
+enum BackgroundInputKind {
+  BACKGROUNDINPUT_OFF,
+  BACKGROUNDINPUT_ALL,
+  BACKGROUNDINPUT_GAMEPAD
+};
+
 struct dMode
 {
 	long height;
@@ -382,7 +388,7 @@ struct sGUI {
 	int  ControllerOption;
 	int  ValidControllerOptions;
 	int  SoundChannelEnable;
-	bool BackgroundInput;
+	BackgroundInputKind BackgroundInput;
 	bool JoystickHotkeys;
 	bool MovieClearSRAM;
 	bool MovieStartFromReset;

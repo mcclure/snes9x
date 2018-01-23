@@ -2017,10 +2017,34 @@ LRESULT CALLBACK WinProc(
             break;
 
 		case ID_EMULATION_BACKGROUNDINPUT:
-			GUI.BackgroundInput = !GUI.BackgroundInput;
-			if(!GUI.hHotkeyTimer)
-				GUI.hHotkeyTimer = timeSetEvent (32, 0, (LPTIMECALLBACK)HotkeyTimer, 0, TIME_PERIODIC);
-			break;
+			{
+				GUI.BackgroundInput = GUI.BackgroundInput == BACKGROUNDINPUT_ALL ? BACKGROUNDINPUT_OFF : BACKGROUNDINPUT_ALL;
+			
+				MENUITEMINFO mii;
+				mii.cbSize = sizeof(mii);
+				mii.fMask = MIIM_STATE;
+				mii.fState = MFS_UNCHECKED;
+				SetMenuItemInfo (GUI.hMenu, ID_EMULATION_BACKGROUNDINPUTUSB, FALSE, &mii);
+
+				if(!GUI.hHotkeyTimer)
+					GUI.hHotkeyTimer = timeSetEvent (32, 0, (LPTIMECALLBACK)HotkeyTimer, 0, TIME_PERIODIC);
+				break;
+			}
+
+		case ID_EMULATION_BACKGROUNDINPUTUSB:
+			{
+				GUI.BackgroundInput = GUI.BackgroundInput == BACKGROUNDINPUT_GAMEPAD ? BACKGROUNDINPUT_OFF : BACKGROUNDINPUT_GAMEPAD;
+
+				MENUITEMINFO mii;
+				mii.cbSize = sizeof(mii);
+				mii.fMask = MIIM_STATE;
+				mii.fState = MFS_UNCHECKED;
+				SetMenuItemInfo (GUI.hMenu, ID_EMULATION_BACKGROUNDINPUT, FALSE, &mii);
+
+				if(!GUI.hHotkeyTimer)
+					GUI.hHotkeyTimer = timeSetEvent (32, 0, (LPTIMECALLBACK)HotkeyTimer, 0, TIME_PERIODIC);
+				break;
+			}
 
 		case ID_FILE_LOADMULTICART:
 			{
@@ -4061,8 +4085,10 @@ static void CheckMenuStates ()
 	mii.fState = (GUI.SoundChannelEnable & (1 << 7)) ? MFS_CHECKED : MFS_UNCHECKED;
     SetMenuItemInfo (GUI.hMenu, ID_CHANNELS_CHANNEL8, FALSE, &mii);
 
-	mii.fState = GUI.BackgroundInput ? MFS_CHECKED : MFS_UNCHECKED;
+	mii.fState = GUI.BackgroundInput == BACKGROUNDINPUT_ALL ? MFS_CHECKED : MFS_UNCHECKED;
 	SetMenuItemInfo (GUI.hMenu, ID_EMULATION_BACKGROUNDINPUT, FALSE, &mii);
+	mii.fState = GUI.BackgroundInput == BACKGROUNDINPUT_GAMEPAD ? MFS_CHECKED : MFS_UNCHECKED;
+	SetMenuItemInfo (GUI.hMenu, ID_EMULATION_BACKGROUNDINPUTUSB, FALSE, &mii);
 
 	UINT validFlag;
     ControllerOptionsFromControllers();

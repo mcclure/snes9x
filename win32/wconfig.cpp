@@ -1015,7 +1015,7 @@ void WinRegisterConfigItems()
 #undef ADDT3
 #undef ADDTN
 #undef ADD2T2
-	AddBool2C("Input:Background", GUI.BackgroundInput, false, "on to detect game keypresses and hotkeys while window is inactive, if PauseWhenInactive = FALSE.");
+	AddUIntC("Input:BackgroundRule", GUI.BackgroundInput, 0, "0 if events like keypresses are ignored whenwhile window is inactive, 1 if they are detected, 2 if they are detected for gamepads but not for the keyboard");
 #undef CATEGORY
 #define	CATEGORY "Controls\\Win\\Hotkeys"
 	AddBool2C("Handler:Joystick", GUI.JoystickHotkeys, true, "on to detect game controller buttons assigned to hotkeys. May impact performance.");
