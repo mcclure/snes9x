@@ -4310,10 +4310,11 @@ int input_getcurrentinputstatus(lua_State* L, bool reportUp, bool reportDown)
 #ifdef __WIN32__
 	// keyboard and mouse button status
 	{
+		int BackgroundInputKeyboard = GUI.BackgroundInput == BACKGROUNDINPUT_ALL;
 		int BackgroundInput = GUI.BackgroundInput;
 
 		unsigned char keys [256];
-		if(!BackgroundInput)
+		if(!BackgroundInputKeyboard)
 		{
 			if(GetKeyboardState(keys))
 			{

@@ -672,7 +672,7 @@ bool S9xGetState (WORD KeyIdent)
 		return true;
 
 	if(!GUI.BackgroundInput && GUI.hWnd != GetForegroundWindow())
-		return true;
+		return true; // No input while in backgound
 
     if (KeyIdent & 0x8000) // if it's a joystick 'key':
     {
@@ -708,6 +708,9 @@ bool S9xGetState (WORD KeyIdent)
                 return !Joystick [j].Button [(KeyIdent & 0xff) - 8];
         }
     }
+
+  if(GUI.BackgroundInput != BACKGROUNDINPUT_ALL && GUI.hWnd != GetForegroundWindow())
+    return true; // No keyboard input while in background
 
 	// the pause key is special, need this to catch all presses of it
 	if(KeyIdent == VK_PAUSE)

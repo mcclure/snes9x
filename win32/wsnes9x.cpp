@@ -1655,7 +1655,7 @@ LRESULT CALLBACK WinProc(
 		DragAcceptFiles(hWnd, TRUE);
 		return 0;
 	case WM_KEYDOWN:
-		if(GUI.BackgroundInput && !GUI.InactivePause)
+		if(GUI.BackgroundInput == BACKGROUNDINPUT_ALL && !GUI.InactivePause)
 			break;
 	case WM_CUSTKEYDOWN:
 	case WM_SYSKEYDOWN:
@@ -2028,6 +2028,7 @@ LRESULT CALLBACK WinProc(
 
 				if(!GUI.hHotkeyTimer)
 					GUI.hHotkeyTimer = timeSetEvent (32, 0, (LPTIMECALLBACK)HotkeyTimer, 0, TIME_PERIODIC);
+
 				break;
 			}
 
@@ -2043,6 +2044,7 @@ LRESULT CALLBACK WinProc(
 
 				if(!GUI.hHotkeyTimer)
 					GUI.hHotkeyTimer = timeSetEvent (32, 0, (LPTIMECALLBACK)HotkeyTimer, 0, TIME_PERIODIC);
+
 				break;
 			}
 
