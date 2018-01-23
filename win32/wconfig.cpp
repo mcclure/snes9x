@@ -875,8 +875,8 @@ void WinRegisterConfigItems()
 	AddBoolC("MessagesInImage", Settings.AutoDisplayMessages, false, "true to draw text inside the SNES image (will get into AVIs, screenshots, and filters)");
 	AddBool2C("FrameRate", Settings.DisplayFrameRate, false, "on to display the framerate (will be inaccurate if AutoMaxSkipFrames is too small)");
 	AddBoolC("DisplayInput", Settings.DisplayPressedKeys, false, "true to show which buttons are pressed");
-	AddBoolC("DisplayFrameCount", Settings.DisplayMovieFrame, true, "true to show the frame count when a movie is playing");
-	AddBoolC("DisplayLagFrameCount", Settings.DisplayLagFrame, true, "true to show the lag frame count");
+	AddBoolC("DisplayFrameCount", Settings.DisplayMovieFrame, false, "true to show the frame count when a movie is playing");
+	AddBoolC("DisplayLagFrameCount", Settings.DisplayLagFrame, false, "true to show the lag frame count");
 #undef CATEGORY
 #define CATEGORY "Display\\Win"
 	AddUIntC("OutputMethod", GUI.outputMethod, 1, "0=DirectDraw, 1=Direct3D, 2=OpenGL");
@@ -897,7 +897,7 @@ void WinRegisterConfigItems()
 	AddBoolC("Stretch:Enabled", GUI.Stretch, true, "true to stretch the game image to fill the window or screen");
 	AddBoolC("Stretch:MaintainAspectRatio", GUI.AspectRatio, true, "prevents stretching from changing the aspect ratio");
 	AddUIntC("Stretch:AspectRatioBaseWidth", GUI.AspectWidth, 256, "base width for aspect ratio calculation (AR=AspectRatioBaseWidth/224), default is 256 - set to 299 for 4:3 aspect ratio");
-	AddBoolC("Stretch:BilinearFilter", GUI.BilinearFilter, true, "allows bilinear filtering of stretching. Depending on your video card and the window size, this may result in a lower framerate.");
+	AddBoolC("Stretch:BilinearFilter", GUI.BilinearFilter, false, "allows bilinear filtering of stretching. Depending on your video card and the window size, this may result in a lower framerate.");
 	AddBoolC("Stretch:LocalVidMem", GUI.LocalVidMem, true, "determines the location of video memory in DirectDraw mode. May increase or decrease rendering performance, depending on your setup and which filter and stretching options are active.");
 	AddBool("Fullscreen:Enabled", GUI.FullScreen, false);
 	AddUInt("Fullscreen:Width", GUI.FullscreenMode.width, 640);
