@@ -2,13 +2,11 @@
 
 This is an emulator hack that turns 1-player games into 2-player games by sharing in-game inventory over the internet. The sharing software is in the coop/ directory. A copy of snes9x-rr is included.
 
-This currently works with Legend of Zelda: A Link to the Past; the [Link to the Past Randomizer](http://vt.alttp.run/randomizer); and Super Metroid.
+This currently works with Legend of Zelda: A Link to the Past; the [Link to the Past Randomizer](http://vt.alttp.run/randomizer); and Super Metroid and its randomizer.
 
 # Usage
 
-When you boot this up, you'll want to turn off the "frame display" by pressing period, and probably turn off bilinear filtering in the video menu.
-
-When you're ready, open the ROM you wish to play. Then select `File->Lua Scripting->New Lua Script Window`. Click "Browse" and select "coop.lua" inside the coop directory.
+Open the ROM you wish to play. Then select `File->Lua Scripting->New Lua Script Window`. Click "Browse" and select "coop.lua" inside the coop directory.
 
 Emu-coop communicates using Internet Relay Chat. You will get a popup asking which IRC server you want to connect to, what nickname you want to use, and what the nickname of your Player 2 will be. Once you're connected, tell your Player 2 to connect to the same network and enter your nick in their emulator. You should see either "Connected to partner", or an error message, pop up on your game screen.
 
@@ -28,7 +26,7 @@ The coop software was written by <<andi.m.mcclure@gmail.com>>.
 
 Big thanks to:
 * The LTTP Randomizer team, esp. Mike Trethewey, Zarby89 and Karkat, for information
-* Alex Zandra and Maya Shinohara for help testing
+* Alex Zandra, Maya Shinohara, and Andypro1 from GitHub for help testing
 
 Unless otherwise noted, the license is:
 
