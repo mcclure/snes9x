@@ -303,7 +303,7 @@ Boolean MultiCartDialog (void)
 
 				cid.signature = 'MNAM';
 				HIViewFindByID(root, cid, &ctl);
-				SetStaticTextTrunc(ctl, truncEnd, false);
+				SetStaticTextTrunc(ctl, 0, false); // 0 is "truncEnd". Apple has removed this enum in newer operating systems.
 				if (multiCartPath[i])
 				{
 					CFStringRef	str;

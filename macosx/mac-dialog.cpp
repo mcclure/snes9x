@@ -458,12 +458,7 @@ void AboutDialog (void)
 
 			err = ChangeWindowAttributes(tWindowRef, kWindowNoAttributes, kWindowInWindowMenuAttribute);
 
-			if (systemVersion >= 0x1040)
-				frec.font = FMGetFontFromATSFontRef(ATSFontFindFromName(CFSTR("Lucida Grande"), kATSOptionFlagsDefault));
-		#ifdef MAC_PANTHER_SUPPORT
-			else
-				frec.font = kThemeSystemFont;
-		#endif
+            frec.font = kThemeSystemFont;
 			frec.just = teCenter;
 
 			root = HIViewGetRoot(tWindowRef);

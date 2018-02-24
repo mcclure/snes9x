@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44B745891F43A09100C2D7FD /* iplrom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B745811F43A09100C2D7FD /* iplrom.cpp */; };
+		44B7458B1F43A09100C2D7FD /* smp_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B745831F43A09100C2D7FD /* smp_state.cpp */; };
+		44B7458C1F43A09100C2D7FD /* smp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B745841F43A09100C2D7FD /* smp.cpp */; };
+		44B7458D1F43A09100C2D7FD /* smp.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 44B745851F43A09100C2D7FD /* smp.hpp */; };
+		44B745BF1F43A12B00C2D7FD /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B745B71F43A12B00C2D7FD /* blargg_common.h */; };
+		44B745C01F43A12B00C2D7FD /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B745B81F43A12B00C2D7FD /* blargg_config.h */; };
+		44B745C11F43A12B00C2D7FD /* blargg_endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B745B91F43A12B00C2D7FD /* blargg_endian.h */; };
+		44B745C21F43A12B00C2D7FD /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B745BA1F43A12B00C2D7FD /* blargg_source.h */; };
+		44B745C31F43A12B00C2D7FD /* sdsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B745BB1F43A12B00C2D7FD /* sdsp.cpp */; };
+		44B745C41F43A12B00C2D7FD /* sdsp.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 44B745BC1F43A12B00C2D7FD /* sdsp.hpp */; };
+		44B745C51F43A12B00C2D7FD /* SPC_DSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B745BD1F43A12B00C2D7FD /* SPC_DSP.cpp */; };
+		44B745C61F43A12B00C2D7FD /* SPC_DSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B745BE1F43A12B00C2D7FD /* SPC_DSP.h */; };
+		44B745C81F43A14500C2D7FD /* snes.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 44B745C71F43A14500C2D7FD /* snes.hpp */; };
 		CF047D38109D0E0600FD0754 /* 65c816.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE0615A0526CCB900A80003 /* 65c816.h */; };
 		CF047D3B109D0E0600FD0754 /* bsx.h in Headers */ = {isa = PBXBuildFile; fileRef = EA2F381A09B17E9E0078DCA7 /* bsx.h */; };
 		CF047D3C109D0E0600FD0754 /* c4.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE061600526CCB900A80003 /* c4.h */; };
@@ -599,55 +612,16 @@
 		CF2F46E91095EE72007D33FA /* libHIDUtilities_u.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3D2F580A26085800BDACCC /* libHIDUtilities_u.a */; };
 		CF37575E10A6AEA1001BF7C5 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37574C10A6AEA1001BF7C5 /* apu.cpp */; };
 		CF37575F10A6AEA1001BF7C5 /* apu.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574D10A6AEA1001BF7C5 /* apu.h */; };
-		CF37576010A6AEA1001BF7C5 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574E10A6AEA1001BF7C5 /* blargg_common.h */; };
-		CF37576110A6AEA1001BF7C5 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574F10A6AEA1001BF7C5 /* blargg_config.h */; };
-		CF37576210A6AEA1001BF7C5 /* blargg_endian.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575010A6AEA1001BF7C5 /* blargg_endian.h */; };
-		CF37576310A6AEA1001BF7C5 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575110A6AEA1001BF7C5 /* blargg_source.h */; };
 		CF37576510A6AEA1001BF7C5 /* resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575310A6AEA1001BF7C5 /* resampler.h */; };
 		CF37576610A6AEA1001BF7C5 /* ring_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575410A6AEA1001BF7C5 /* ring_buffer.h */; };
-		CF37576710A6AEA1001BF7C5 /* SNES_SPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575510A6AEA1001BF7C5 /* SNES_SPC.cpp */; };
-		CF37576810A6AEA1001BF7C5 /* SNES_SPC.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575610A6AEA1001BF7C5 /* SNES_SPC.h */; };
-		CF37576910A6AEA1001BF7C5 /* SNES_SPC_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575710A6AEA1001BF7C5 /* SNES_SPC_misc.cpp */; };
-		CF37576A10A6AEA1001BF7C5 /* SNES_SPC_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575810A6AEA1001BF7C5 /* SNES_SPC_state.cpp */; };
-		CF37576B10A6AEA1001BF7C5 /* SPC_CPU.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575910A6AEA1001BF7C5 /* SPC_CPU.h */; };
-		CF37576C10A6AEA1001BF7C5 /* SPC_DSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575A10A6AEA1001BF7C5 /* SPC_DSP.cpp */; };
-		CF37576D10A6AEA1001BF7C5 /* SPC_DSP.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575B10A6AEA1001BF7C5 /* SPC_DSP.h */; };
-		CF37576E10A6AEA1001BF7C5 /* SPC_Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575C10A6AEA1001BF7C5 /* SPC_Filter.cpp */; };
-		CF37576F10A6AEA1001BF7C5 /* SPC_Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575D10A6AEA1001BF7C5 /* SPC_Filter.h */; };
 		CF37577010A6AEA1001BF7C5 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37574C10A6AEA1001BF7C5 /* apu.cpp */; };
 		CF37577110A6AEA1001BF7C5 /* apu.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574D10A6AEA1001BF7C5 /* apu.h */; };
-		CF37577210A6AEA1001BF7C5 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574E10A6AEA1001BF7C5 /* blargg_common.h */; };
-		CF37577310A6AEA1001BF7C5 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574F10A6AEA1001BF7C5 /* blargg_config.h */; };
-		CF37577410A6AEA1001BF7C5 /* blargg_endian.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575010A6AEA1001BF7C5 /* blargg_endian.h */; };
-		CF37577510A6AEA1001BF7C5 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575110A6AEA1001BF7C5 /* blargg_source.h */; };
 		CF37577710A6AEA1001BF7C5 /* resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575310A6AEA1001BF7C5 /* resampler.h */; };
 		CF37577810A6AEA1001BF7C5 /* ring_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575410A6AEA1001BF7C5 /* ring_buffer.h */; };
-		CF37577910A6AEA1001BF7C5 /* SNES_SPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575510A6AEA1001BF7C5 /* SNES_SPC.cpp */; };
-		CF37577A10A6AEA1001BF7C5 /* SNES_SPC.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575610A6AEA1001BF7C5 /* SNES_SPC.h */; };
-		CF37577B10A6AEA1001BF7C5 /* SNES_SPC_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575710A6AEA1001BF7C5 /* SNES_SPC_misc.cpp */; };
-		CF37577C10A6AEA1001BF7C5 /* SNES_SPC_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575810A6AEA1001BF7C5 /* SNES_SPC_state.cpp */; };
-		CF37577D10A6AEA1001BF7C5 /* SPC_CPU.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575910A6AEA1001BF7C5 /* SPC_CPU.h */; };
-		CF37577E10A6AEA1001BF7C5 /* SPC_DSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575A10A6AEA1001BF7C5 /* SPC_DSP.cpp */; };
-		CF37577F10A6AEA1001BF7C5 /* SPC_DSP.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575B10A6AEA1001BF7C5 /* SPC_DSP.h */; };
-		CF37578010A6AEA1001BF7C5 /* SPC_Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575C10A6AEA1001BF7C5 /* SPC_Filter.cpp */; };
-		CF37578110A6AEA1001BF7C5 /* SPC_Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575D10A6AEA1001BF7C5 /* SPC_Filter.h */; };
 		CF37578210A6AEA1001BF7C5 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37574C10A6AEA1001BF7C5 /* apu.cpp */; };
 		CF37578310A6AEA1001BF7C5 /* apu.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574D10A6AEA1001BF7C5 /* apu.h */; };
-		CF37578410A6AEA1001BF7C5 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574E10A6AEA1001BF7C5 /* blargg_common.h */; };
-		CF37578510A6AEA1001BF7C5 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37574F10A6AEA1001BF7C5 /* blargg_config.h */; };
-		CF37578610A6AEA1001BF7C5 /* blargg_endian.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575010A6AEA1001BF7C5 /* blargg_endian.h */; };
-		CF37578710A6AEA1001BF7C5 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575110A6AEA1001BF7C5 /* blargg_source.h */; };
 		CF37578910A6AEA1001BF7C5 /* resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575310A6AEA1001BF7C5 /* resampler.h */; };
 		CF37578A10A6AEA1001BF7C5 /* ring_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575410A6AEA1001BF7C5 /* ring_buffer.h */; };
-		CF37578B10A6AEA1001BF7C5 /* SNES_SPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575510A6AEA1001BF7C5 /* SNES_SPC.cpp */; };
-		CF37578C10A6AEA1001BF7C5 /* SNES_SPC.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575610A6AEA1001BF7C5 /* SNES_SPC.h */; };
-		CF37578D10A6AEA1001BF7C5 /* SNES_SPC_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575710A6AEA1001BF7C5 /* SNES_SPC_misc.cpp */; };
-		CF37578E10A6AEA1001BF7C5 /* SNES_SPC_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575810A6AEA1001BF7C5 /* SNES_SPC_state.cpp */; };
-		CF37578F10A6AEA1001BF7C5 /* SPC_CPU.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575910A6AEA1001BF7C5 /* SPC_CPU.h */; };
-		CF37579010A6AEA1001BF7C5 /* SPC_DSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575A10A6AEA1001BF7C5 /* SPC_DSP.cpp */; };
-		CF37579110A6AEA1001BF7C5 /* SPC_DSP.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575B10A6AEA1001BF7C5 /* SPC_DSP.h */; };
-		CF37579210A6AEA1001BF7C5 /* SPC_Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF37575C10A6AEA1001BF7C5 /* SPC_Filter.cpp */; };
-		CF37579310A6AEA1001BF7C5 /* SPC_Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = CF37575D10A6AEA1001BF7C5 /* SPC_Filter.h */; };
 		CF3E424A1372D48F0077DE32 /* libz_u.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF3E42491372D48F0077DE32 /* libz_u.a */; };
 		CF3E424B1372D48F0077DE32 /* libz_u.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF3E42491372D48F0077DE32 /* libz_u.a */; };
 		CF3E424C1372D48F0077DE32 /* libz_u.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF3E42491372D48F0077DE32 /* libz_u.a */; };
@@ -682,11 +656,8 @@
 		CFA518DD0EBCB4D2008379F6 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = CFA518DA0EBCB4D2008379F6 /* unzip.h */; };
 		CFA518E80EBCB5B1008379F6 /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = CFA518E50EBCB5B1008379F6 /* crypt.h */; };
 		CFAEC7DE1113149B00E0A846 /* hermite_resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CFAEC7DC1113149B00E0A846 /* hermite_resampler.h */; };
-		CFAEC7DF1113149B00E0A846 /* linear_resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CFAEC7DD1113149B00E0A846 /* linear_resampler.h */; };
 		CFAEC7E01113149B00E0A846 /* hermite_resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CFAEC7DC1113149B00E0A846 /* hermite_resampler.h */; };
-		CFAEC7E11113149B00E0A846 /* linear_resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CFAEC7DD1113149B00E0A846 /* linear_resampler.h */; };
 		CFAEC7E21113149B00E0A846 /* hermite_resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CFAEC7DC1113149B00E0A846 /* hermite_resampler.h */; };
-		CFAEC7E31113149B00E0A846 /* linear_resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = CFAEC7DD1113149B00E0A846 /* linear_resampler.h */; };
 		CFCE2D47133F591900DF6C4E /* musicbox_effect.png in Resources */ = {isa = PBXBuildFile; fileRef = CFCE2D45133F591900DF6C4E /* musicbox_effect.png */; };
 		CFCE2D48133F591900DF6C4E /* musicbox_rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = CFCE2D46133F591900DF6C4E /* musicbox_rewind.png */; };
 		CFCE2D49133F591900DF6C4E /* musicbox_effect.png in Resources */ = {isa = PBXBuildFile; fileRef = CFCE2D45133F591900DF6C4E /* musicbox_effect.png */; };
@@ -712,6 +683,19 @@
 
 /* Begin PBXFileReference section */
 		20286C33FDCF999611CA2CEA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		44B745811F43A09100C2D7FD /* iplrom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iplrom.cpp; path = bapu/smp/iplrom.cpp; sourceTree = "<group>"; };
+		44B745831F43A09100C2D7FD /* smp_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smp_state.cpp; path = bapu/smp/smp_state.cpp; sourceTree = "<group>"; };
+		44B745841F43A09100C2D7FD /* smp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smp.cpp; path = bapu/smp/smp.cpp; sourceTree = "<group>"; };
+		44B745851F43A09100C2D7FD /* smp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = smp.hpp; path = bapu/smp/smp.hpp; sourceTree = "<group>"; };
+		44B745B71F43A12B00C2D7FD /* blargg_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blargg_common.h; path = bapu/dsp/blargg_common.h; sourceTree = "<group>"; };
+		44B745B81F43A12B00C2D7FD /* blargg_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blargg_config.h; path = bapu/dsp/blargg_config.h; sourceTree = "<group>"; };
+		44B745B91F43A12B00C2D7FD /* blargg_endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blargg_endian.h; path = bapu/dsp/blargg_endian.h; sourceTree = "<group>"; };
+		44B745BA1F43A12B00C2D7FD /* blargg_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blargg_source.h; path = bapu/dsp/blargg_source.h; sourceTree = "<group>"; };
+		44B745BB1F43A12B00C2D7FD /* sdsp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdsp.cpp; path = bapu/dsp/sdsp.cpp; sourceTree = "<group>"; };
+		44B745BC1F43A12B00C2D7FD /* sdsp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = sdsp.hpp; path = bapu/dsp/sdsp.hpp; sourceTree = "<group>"; };
+		44B745BD1F43A12B00C2D7FD /* SPC_DSP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SPC_DSP.cpp; path = bapu/dsp/SPC_DSP.cpp; sourceTree = "<group>"; };
+		44B745BE1F43A12B00C2D7FD /* SPC_DSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPC_DSP.h; path = bapu/dsp/SPC_DSP.h; sourceTree = "<group>"; };
+		44B745C71F43A14500C2D7FD /* snes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = snes.hpp; path = bapu/snes/snes.hpp; sourceTree = "<group>"; };
 		CF047E15109D0E0600FD0754 /* Snes9x (i386).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Snes9x (i386).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF047E17109D0E0600FD0754 /* Info_i386.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info_i386.plist; sourceTree = "<group>"; };
 		CF0567660CF98E7E00C7877C /* Snes9x.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snes9x.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -725,21 +709,8 @@
 		CF2F47C41095F093007D33FA /* Info_ppc.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_ppc.plist; sourceTree = "<group>"; };
 		CF37574C10A6AEA1001BF7C5 /* apu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = apu.cpp; sourceTree = "<group>"; };
 		CF37574D10A6AEA1001BF7C5 /* apu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = apu.h; sourceTree = "<group>"; };
-		CF37574E10A6AEA1001BF7C5 /* blargg_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_common.h; sourceTree = "<group>"; };
-		CF37574F10A6AEA1001BF7C5 /* blargg_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_config.h; sourceTree = "<group>"; };
-		CF37575010A6AEA1001BF7C5 /* blargg_endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_endian.h; sourceTree = "<group>"; };
-		CF37575110A6AEA1001BF7C5 /* blargg_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_source.h; sourceTree = "<group>"; };
 		CF37575310A6AEA1001BF7C5 /* resampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resampler.h; sourceTree = "<group>"; };
 		CF37575410A6AEA1001BF7C5 /* ring_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ring_buffer.h; sourceTree = "<group>"; };
-		CF37575510A6AEA1001BF7C5 /* SNES_SPC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SNES_SPC.cpp; sourceTree = "<group>"; };
-		CF37575610A6AEA1001BF7C5 /* SNES_SPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNES_SPC.h; sourceTree = "<group>"; };
-		CF37575710A6AEA1001BF7C5 /* SNES_SPC_misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SNES_SPC_misc.cpp; sourceTree = "<group>"; };
-		CF37575810A6AEA1001BF7C5 /* SNES_SPC_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SNES_SPC_state.cpp; sourceTree = "<group>"; };
-		CF37575910A6AEA1001BF7C5 /* SPC_CPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPC_CPU.h; sourceTree = "<group>"; };
-		CF37575A10A6AEA1001BF7C5 /* SPC_DSP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SPC_DSP.cpp; sourceTree = "<group>"; };
-		CF37575B10A6AEA1001BF7C5 /* SPC_DSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPC_DSP.h; sourceTree = "<group>"; };
-		CF37575C10A6AEA1001BF7C5 /* SPC_Filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SPC_Filter.cpp; sourceTree = "<group>"; };
-		CF37575D10A6AEA1001BF7C5 /* SPC_Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPC_Filter.h; sourceTree = "<group>"; };
 		CF3E42491372D48F0077DE32 /* libz_u.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libz_u.a; sourceTree = "<group>"; };
 		CF3E45BD137349960077DE32 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = zconf.h; sourceTree = "<group>"; };
 		CF3E45D013734A920077DE32 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = zlib.h; sourceTree = "<group>"; };
@@ -767,7 +738,6 @@
 		CFA82C3D0F1B43A60089C17F /* srtcemu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = srtcemu.h; sourceTree = "<group>"; };
 		CFA82C3E0F1B43A60089C17F /* srtcemu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = srtcemu.cpp; sourceTree = "<group>"; };
 		CFAEC7DC1113149B00E0A846 /* hermite_resampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hermite_resampler.h; sourceTree = "<group>"; };
-		CFAEC7DD1113149B00E0A846 /* linear_resampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linear_resampler.h; sourceTree = "<group>"; };
 		CFCE2D45133F591900DF6C4E /* musicbox_effect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = musicbox_effect.png; sourceTree = "<group>"; };
 		CFCE2D46133F591900DF6C4E /* musicbox_rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = musicbox_rewind.png; sourceTree = "<group>"; };
 		CFEFAE8A10EAC92300FB081A /* snes_ntsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = snes_ntsc.c; sourceTree = "<group>"; };
@@ -1068,28 +1038,59 @@
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
+		44B745791F43A03900C2D7FD /* bapu */ = {
+			isa = PBXGroup;
+			children = (
+				44B7457E1F43A07000C2D7FD /* snes */,
+				44B7457D1F43A06B00C2D7FD /* smp */,
+				44B7457C1F43A05F00C2D7FD /* dsp */,
+			);
+			name = bapu;
+			sourceTree = "<group>";
+		};
+		44B7457C1F43A05F00C2D7FD /* dsp */ = {
+			isa = PBXGroup;
+			children = (
+				44B745B71F43A12B00C2D7FD /* blargg_common.h */,
+				44B745B81F43A12B00C2D7FD /* blargg_config.h */,
+				44B745B91F43A12B00C2D7FD /* blargg_endian.h */,
+				44B745BA1F43A12B00C2D7FD /* blargg_source.h */,
+				44B745BB1F43A12B00C2D7FD /* sdsp.cpp */,
+				44B745BC1F43A12B00C2D7FD /* sdsp.hpp */,
+				44B745BD1F43A12B00C2D7FD /* SPC_DSP.cpp */,
+				44B745BE1F43A12B00C2D7FD /* SPC_DSP.h */,
+			);
+			name = dsp;
+			sourceTree = "<group>";
+		};
+		44B7457D1F43A06B00C2D7FD /* smp */ = {
+			isa = PBXGroup;
+			children = (
+				44B745811F43A09100C2D7FD /* iplrom.cpp */,
+				44B745831F43A09100C2D7FD /* smp_state.cpp */,
+				44B745841F43A09100C2D7FD /* smp.cpp */,
+				44B745851F43A09100C2D7FD /* smp.hpp */,
+			);
+			name = smp;
+			sourceTree = "<group>";
+		};
+		44B7457E1F43A07000C2D7FD /* snes */ = {
+			isa = PBXGroup;
+			children = (
+				44B745C71F43A14500C2D7FD /* snes.hpp */,
+			);
+			name = snes;
+			sourceTree = "<group>";
+		};
 		CF37574B10A6AEA1001BF7C5 /* apu */ = {
 			isa = PBXGroup;
 			children = (
+				44B745791F43A03900C2D7FD /* bapu */,
 				CF37574D10A6AEA1001BF7C5 /* apu.h */,
-				CF37574E10A6AEA1001BF7C5 /* blargg_common.h */,
-				CF37574F10A6AEA1001BF7C5 /* blargg_config.h */,
-				CF37575010A6AEA1001BF7C5 /* blargg_endian.h */,
-				CF37575110A6AEA1001BF7C5 /* blargg_source.h */,
 				CFAEC7DC1113149B00E0A846 /* hermite_resampler.h */,
-				CFAEC7DD1113149B00E0A846 /* linear_resampler.h */,
 				CF37575310A6AEA1001BF7C5 /* resampler.h */,
 				CF37575410A6AEA1001BF7C5 /* ring_buffer.h */,
-				CF37575610A6AEA1001BF7C5 /* SNES_SPC.h */,
-				CF37575910A6AEA1001BF7C5 /* SPC_CPU.h */,
-				CF37575B10A6AEA1001BF7C5 /* SPC_DSP.h */,
-				CF37575D10A6AEA1001BF7C5 /* SPC_Filter.h */,
 				CF37574C10A6AEA1001BF7C5 /* apu.cpp */,
-				CF37575510A6AEA1001BF7C5 /* SNES_SPC.cpp */,
-				CF37575710A6AEA1001BF7C5 /* SNES_SPC_misc.cpp */,
-				CF37575810A6AEA1001BF7C5 /* SNES_SPC_state.cpp */,
-				CF37575A10A6AEA1001BF7C5 /* SPC_DSP.cpp */,
-				CF37575C10A6AEA1001BF7C5 /* SPC_Filter.cpp */,
 			);
 			path = apu;
 			sourceTree = "<group>";
@@ -1397,18 +1398,9 @@
 				CF047D63109D0E0600FD0754 /* srtc.h in Headers */,
 				CF047D64109D0E0600FD0754 /* tile.h in Headers */,
 				CF37577110A6AEA1001BF7C5 /* apu.h in Headers */,
-				CF37577210A6AEA1001BF7C5 /* blargg_common.h in Headers */,
-				CF37577310A6AEA1001BF7C5 /* blargg_config.h in Headers */,
-				CF37577410A6AEA1001BF7C5 /* blargg_endian.h in Headers */,
-				CF37577510A6AEA1001BF7C5 /* blargg_source.h in Headers */,
 				CFAEC7E01113149B00E0A846 /* hermite_resampler.h in Headers */,
-				CFAEC7E11113149B00E0A846 /* linear_resampler.h in Headers */,
 				CF37577710A6AEA1001BF7C5 /* resampler.h in Headers */,
 				CF37577810A6AEA1001BF7C5 /* ring_buffer.h in Headers */,
-				CF37577A10A6AEA1001BF7C5 /* SNES_SPC.h in Headers */,
-				CF37577D10A6AEA1001BF7C5 /* SPC_CPU.h in Headers */,
-				CF37577F10A6AEA1001BF7C5 /* SPC_DSP.h in Headers */,
-				CF37578110A6AEA1001BF7C5 /* SPC_Filter.h in Headers */,
 				CF047D65109D0E0600FD0754 /* 2xsai.h in Headers */,
 				CF047D66109D0E0600FD0754 /* blit.h in Headers */,
 				CF047D67109D0E0600FD0754 /* epx.h in Headers */,
@@ -1484,6 +1476,7 @@
 				CF0566970CF98E7E00C7877C /* cpumacro.h in Headers */,
 				CF0566980CF98E7E00C7877C /* cpuops.h in Headers */,
 				CF0566990CF98E7E00C7877C /* crosshairs.h in Headers */,
+				44B745C11F43A12B00C2D7FD /* blargg_endian.h in Headers */,
 				CFE7FBB80D2F683C002F3102 /* debug.h in Headers */,
 				CF05669A0CF98E7E00C7877C /* display.h in Headers */,
 				CF05669B0CF98E7E00C7877C /* dma.h in Headers */,
@@ -1494,6 +1487,7 @@
 				CF0566A00CF98E7E00C7877C /* getset.h in Headers */,
 				CF0566A10CF98E7E00C7877C /* gfx.h in Headers */,
 				CF0566A20CF98E7E00C7877C /* language.h in Headers */,
+				44B745BF1F43A12B00C2D7FD /* blargg_common.h in Headers */,
 				CF0566A30CF98E7E00C7877C /* logger.h in Headers */,
 				CF0566A40CF98E7E00C7877C /* memmap.h in Headers */,
 				CF0566A50CF98E7E00C7877C /* messages.h in Headers */,
@@ -1510,27 +1504,20 @@
 				CF0566B00CF98E7E00C7877C /* sdd1.h in Headers */,
 				CF0566B10CF98E7E00C7877C /* sdd1emu.h in Headers */,
 				CF0566B20CF98E7E00C7877C /* seta.h in Headers */,
+				44B745C81F43A14500C2D7FD /* snes.hpp in Headers */,
 				CF0566B30CF98E7E00C7877C /* snapshot.h in Headers */,
 				CF0566B40CF98E7E00C7877C /* snes9x.h in Headers */,
 				CF0566B70CF98E7E00C7877C /* spc7110.h in Headers */,
 				CF0566B80CF98E7E00C7877C /* srtc.h in Headers */,
 				CF0566B90CF98E7E00C7877C /* tile.h in Headers */,
 				CF37578310A6AEA1001BF7C5 /* apu.h in Headers */,
-				CF37578410A6AEA1001BF7C5 /* blargg_common.h in Headers */,
-				CF37578510A6AEA1001BF7C5 /* blargg_config.h in Headers */,
-				CF37578610A6AEA1001BF7C5 /* blargg_endian.h in Headers */,
-				CF37578710A6AEA1001BF7C5 /* blargg_source.h in Headers */,
 				CFAEC7DE1113149B00E0A846 /* hermite_resampler.h in Headers */,
-				CFAEC7DF1113149B00E0A846 /* linear_resampler.h in Headers */,
 				CF37578910A6AEA1001BF7C5 /* resampler.h in Headers */,
 				CF37578A10A6AEA1001BF7C5 /* ring_buffer.h in Headers */,
-				CF37578C10A6AEA1001BF7C5 /* SNES_SPC.h in Headers */,
-				CF37578F10A6AEA1001BF7C5 /* SPC_CPU.h in Headers */,
-				CF37579110A6AEA1001BF7C5 /* SPC_DSP.h in Headers */,
-				CF37579310A6AEA1001BF7C5 /* SPC_Filter.h in Headers */,
 				CF5553CA0EA24C36005957E4 /* 2xsai.h in Headers */,
 				CF5553CC0EA24C36005957E4 /* blit.h in Headers */,
 				CF5553CE0EA24C36005957E4 /* epx.h in Headers */,
+				44B745C01F43A12B00C2D7FD /* blargg_config.h in Headers */,
 				CF5553D00EA24C36005957E4 /* hq2x.h in Headers */,
 				CFEFAE9910EAC92B00FB081A /* snes_ntsc.h in Headers */,
 				CFEFAE9710EAC92B00FB081A /* snes_ntsc_config.h in Headers */,
@@ -1552,10 +1539,13 @@
 				CF0566C80CF98E7E00C7877C /* lzma.h in Headers */,
 				CF0566C90CF98E7E00C7877C /* lzmadec.h in Headers */,
 				CF0566CA0CF98E7E00C7877C /* portable.h in Headers */,
+				44B7458D1F43A09100C2D7FD /* smp.hpp in Headers */,
 				CF0566CB0CF98E7E00C7877C /* rcdefs.h in Headers */,
+				44B745C61F43A12B00C2D7FD /* SPC_DSP.h in Headers */,
 				CF0566CC0CF98E7E00C7877C /* rngcoder.h in Headers */,
 				CF0566CD0CF98E7E00C7877C /* s9x-jma.h in Headers */,
 				CF0566CE0CF98E7E00C7877C /* winout.h in Headers */,
+				44B745C41F43A12B00C2D7FD /* sdsp.hpp in Headers */,
 				CF0566D00CF98E7E00C7877C /* mac-appleevent.h in Headers */,
 				CF0566D10CF98E7E00C7877C /* mac-audio.h in Headers */,
 				CF0566D30CF98E7E00C7877C /* mac-cart.h in Headers */,
@@ -1564,6 +1554,7 @@
 				CF0566D60CF98E7E00C7877C /* mac-client.h in Headers */,
 				CF0566D70CF98E7E00C7877C /* mac-cocoatools.h in Headers */,
 				CF0566D80CF98E7E00C7877C /* mac-controls.h in Headers */,
+				44B745C21F43A12B00C2D7FD /* blargg_source.h in Headers */,
 				CF0566D90CF98E7E00C7877C /* mac-coreimage.h in Headers */,
 				CF0566DA0CF98E7E00C7877C /* mac-dialog.h in Headers */,
 				CF0566DC0CF98E7E00C7877C /* mac-file.h in Headers */,
@@ -1635,18 +1626,9 @@
 				CF2F463D1095EE72007D33FA /* srtc.h in Headers */,
 				CF2F463E1095EE72007D33FA /* tile.h in Headers */,
 				CF37575F10A6AEA1001BF7C5 /* apu.h in Headers */,
-				CF37576010A6AEA1001BF7C5 /* blargg_common.h in Headers */,
-				CF37576110A6AEA1001BF7C5 /* blargg_config.h in Headers */,
-				CF37576210A6AEA1001BF7C5 /* blargg_endian.h in Headers */,
-				CF37576310A6AEA1001BF7C5 /* blargg_source.h in Headers */,
 				CFAEC7E21113149B00E0A846 /* hermite_resampler.h in Headers */,
-				CFAEC7E31113149B00E0A846 /* linear_resampler.h in Headers */,
 				CF37576510A6AEA1001BF7C5 /* resampler.h in Headers */,
 				CF37576610A6AEA1001BF7C5 /* ring_buffer.h in Headers */,
-				CF37576810A6AEA1001BF7C5 /* SNES_SPC.h in Headers */,
-				CF37576B10A6AEA1001BF7C5 /* SPC_CPU.h in Headers */,
-				CF37576D10A6AEA1001BF7C5 /* SPC_DSP.h in Headers */,
-				CF37576F10A6AEA1001BF7C5 /* SPC_Filter.h in Headers */,
 				CF2F463F1095EE72007D33FA /* 2xsai.h in Headers */,
 				CF2F46401095EE72007D33FA /* blit.h in Headers */,
 				CF2F46411095EE72007D33FA /* epx.h in Headers */,
@@ -1773,6 +1755,8 @@
 /* Begin PBXProject section */
 		20286C28FDCF999611CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = EA6A1100085808D200A1CF18 /* Build configuration list for PBXProject "snes9x" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -1952,11 +1936,6 @@
 				CF047DD9109D0E0600FD0754 /* srtc.cpp in Sources */,
 				CF047DDA109D0E0600FD0754 /* tile.cpp in Sources */,
 				CF37577010A6AEA1001BF7C5 /* apu.cpp in Sources */,
-				CF37577910A6AEA1001BF7C5 /* SNES_SPC.cpp in Sources */,
-				CF37577B10A6AEA1001BF7C5 /* SNES_SPC_misc.cpp in Sources */,
-				CF37577C10A6AEA1001BF7C5 /* SNES_SPC_state.cpp in Sources */,
-				CF37577E10A6AEA1001BF7C5 /* SPC_DSP.cpp in Sources */,
-				CF37578010A6AEA1001BF7C5 /* SPC_Filter.cpp in Sources */,
 				CF047DDB109D0E0600FD0754 /* 2xsai.cpp in Sources */,
 				CF047DDC109D0E0600FD0754 /* blit.cpp in Sources */,
 				CF047DDD109D0E0600FD0754 /* epx.cpp in Sources */,
@@ -2008,6 +1987,7 @@
 				CF0567030CF98E7E00C7877C /* bsx.cpp in Sources */,
 				CF0567040CF98E7E00C7877C /* c4.cpp in Sources */,
 				CF0567050CF98E7E00C7877C /* c4emu.cpp in Sources */,
+				44B745C51F43A12B00C2D7FD /* SPC_DSP.cpp in Sources */,
 				CF0567060CF98E7E00C7877C /* cheats.cpp in Sources */,
 				CF0567070CF98E7E00C7877C /* cheats2.cpp in Sources */,
 				CF0567080CF98E7E00C7877C /* clip.cpp in Sources */,
@@ -2015,6 +1995,7 @@
 				CF05670A0CF98E7E00C7877C /* cpu.cpp in Sources */,
 				CF05670B0CF98E7E00C7877C /* cpuexec.cpp in Sources */,
 				CF05670C0CF98E7E00C7877C /* cpuops.cpp in Sources */,
+				44B745891F43A09100C2D7FD /* iplrom.cpp in Sources */,
 				CF05670D0CF98E7E00C7877C /* crosshairs.cpp in Sources */,
 				CFE7FBB10D2F6755002F3102 /* debug.cpp in Sources */,
 				CF05670F0CF98E7E00C7877C /* dma.cpp in Sources */,
@@ -2035,6 +2016,7 @@
 				CF05671A0CF98E7E00C7877C /* ppu.cpp in Sources */,
 				CF05671B0CF98E7E00C7877C /* stream.cpp in Sources */,
 				CF05671C0CF98E7E00C7877C /* sa1.cpp in Sources */,
+				44B745C31F43A12B00C2D7FD /* sdsp.cpp in Sources */,
 				CF05671D0CF98E7E00C7877C /* sa1cpu.cpp in Sources */,
 				CF05671E0CF98E7E00C7877C /* sdd1.cpp in Sources */,
 				CF05671F0CF98E7E00C7877C /* sdd1emu.cpp in Sources */,
@@ -2047,11 +2029,6 @@
 				CF0567280CF98E7E00C7877C /* srtc.cpp in Sources */,
 				CF0567290CF98E7E00C7877C /* tile.cpp in Sources */,
 				CF37578210A6AEA1001BF7C5 /* apu.cpp in Sources */,
-				CF37578B10A6AEA1001BF7C5 /* SNES_SPC.cpp in Sources */,
-				CF37578D10A6AEA1001BF7C5 /* SNES_SPC_misc.cpp in Sources */,
-				CF37578E10A6AEA1001BF7C5 /* SNES_SPC_state.cpp in Sources */,
-				CF37579010A6AEA1001BF7C5 /* SPC_DSP.cpp in Sources */,
-				CF37579210A6AEA1001BF7C5 /* SPC_Filter.cpp in Sources */,
 				CF5553C90EA24C36005957E4 /* 2xsai.cpp in Sources */,
 				CF5553CB0EA24C36005957E4 /* blit.cpp in Sources */,
 				CF5553CD0EA24C36005957E4 /* epx.cpp in Sources */,
@@ -2075,8 +2052,10 @@
 				CF05673D0CF98E7E00C7877C /* mac-cheatfinder.cpp in Sources */,
 				CF05673E0CF98E7E00C7877C /* mac-client.cpp in Sources */,
 				CF05673F0CF98E7E00C7877C /* mac-cocoatools.mm in Sources */,
+				44B7458C1F43A09100C2D7FD /* smp.cpp in Sources */,
 				CF0567400CF98E7E00C7877C /* mac-controls.cpp in Sources */,
 				CF0567410CF98E7E00C7877C /* mac-coreimage.mm in Sources */,
+				44B7458B1F43A09100C2D7FD /* smp_state.cpp in Sources */,
 				CF0567420CF98E7E00C7877C /* mac-dialog.cpp in Sources */,
 				CF0567440CF98E7E00C7877C /* mac-file.cpp in Sources */,
 				CF0567450CF98E7E00C7877C /* mac-gworld.cpp in Sources */,
@@ -2142,11 +2121,6 @@
 				CF2F46B31095EE72007D33FA /* srtc.cpp in Sources */,
 				CF2F46B41095EE72007D33FA /* tile.cpp in Sources */,
 				CF37575E10A6AEA1001BF7C5 /* apu.cpp in Sources */,
-				CF37576710A6AEA1001BF7C5 /* SNES_SPC.cpp in Sources */,
-				CF37576910A6AEA1001BF7C5 /* SNES_SPC_misc.cpp in Sources */,
-				CF37576A10A6AEA1001BF7C5 /* SNES_SPC_state.cpp in Sources */,
-				CF37576C10A6AEA1001BF7C5 /* SPC_DSP.cpp in Sources */,
-				CF37576E10A6AEA1001BF7C5 /* SPC_Filter.cpp in Sources */,
 				CF2F46B51095EE72007D33FA /* 2xsai.cpp in Sources */,
 				CF2F46B61095EE72007D33FA /* blit.cpp in Sources */,
 				CF2F46B71095EE72007D33FA /* epx.cpp in Sources */,
@@ -2246,6 +2220,7 @@
 		CF047D03109C98F900FD0754 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
@@ -2272,6 +2247,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../apu/bapu";
 				INFOPLIST_FILE = Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					.,
@@ -2439,6 +2415,7 @@
 		CF0567650CF98E7E00C7877C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DEAD_CODE_STRIPPING = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
@@ -2467,6 +2444,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../apu/bapu";
 				INFOPLIST_FILE = Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					.,

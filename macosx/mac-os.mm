@@ -208,7 +208,6 @@
 #endif
 
 #import <Cocoa/Cocoa.h>
-#import <QuickTime/QuickTime.h>
 #import <pthread.h>
 
 #import "mac-prefix.h"
@@ -3196,7 +3195,7 @@ static void Initialize (void)
 
 	NSApplicationLoad();
 
-	ZeroMemory(&Settings, sizeof(Settings));
+	bzero(&Settings, sizeof(Settings));
 	Settings.MouseMaster = true;
 	Settings.SuperScopeMaster = true;
 	Settings.JustifierMaster = true;
@@ -3296,8 +3295,6 @@ static void Initialize (void)
 	S9xSetupDefaultKeymap();
 	ChangeInputDevice();
 
-	err = EnterMovies();
-
 	if (!Memory.Init() || !S9xInitAPU() || !S9xGraphicsInit())
 		QuitWithFatalError(err, "os 01");
 
@@ -3322,8 +3319,6 @@ static void Deinitialize (void)
 	}
 
 	deviceSetting = deviceSettingMaster;
-
-	ExitMovies();
 
 	DeinitMultiCart();
 	DeinitRecentMenu();
