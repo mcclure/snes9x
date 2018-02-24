@@ -22,7 +22,7 @@ You can add support for additional games-- or new modes for games emu-coop alrea
 
 ## Author / License
 
-The coop software was written by <<andi.m.mcclure@gmail.com>>.
+The coop software was written by <<andi.m.mcclure@gmail.com>>. The "tloz_" modes (Zelda 1) were written by megmacAttack.
 
 Big thanks to:
 * The LTTP Randomizer team, esp. Mike Trethewey, Zarby89 and Karkat, for information
