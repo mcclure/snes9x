@@ -14,6 +14,14 @@ If you halt a game in the middle and have to restart-- maybe your emulator crash
 
 At the moment, you can run the script once per snes9x boot. On the second attempt to run the coop script it crashes. I don't know why.
 
+## WINE
+
+Running this script requires elevated priveleges when using WINE on linux. If you find that your emulator is crashing when you attempt to load the lua script, try running wine with `sudo`.
+
+```
+sudo -H wine snes9x-coop
+```
+
 ## Modding
 
 You can add support for additional games-- or new modes for games emu-coop already supports-- by creating a .lua file and putting it into emu-coop's "modes" directory. If you add a new mode file, you will also need to add its name to the file `modes/index.lua`.
